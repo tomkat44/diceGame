@@ -1,0 +1,44 @@
+[project]
+name = "digidice"
+version = "0.0.1"
+description = "Fair Digital Dice"
+authors = [
+    {name = "Ioannis Somos"},
+    {name = "Thomas Katsantas"}
+]
+readme = "README.rst"
+keywords = ["dice", "game"]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django :: 4.2",
+    "Programming Language :: Python :: 3",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "django[argon2]~=4.2",
+    "djangorestframework~=3.14",
+    "djangorestframework-simplejwt[crypto]~=5.2"
+]
+
+[project.optional-dependencies]
+uwsgi = ["uwsgi"]
+dev = [
+    "django-stubs~=4.2",
+    "djangorestframework-stubs~=3.14"
+]
+
+[project.urls]
+Homepage = "https://gitlab.com/ObserverOfTime/netsec-assignment"
+
+[build-system]
+requires = ["setuptools >= 58.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.mypy]
+plugins = [
+    "mypy_django_plugin.main",
+    "mypy_drf_plugin.main"
+]
+
+[tool.django-stubs]
+django_settings_module = "digidice.settings"

@@ -1,0 +1,49 @@
+## IntelliJ
+.idea/*
+out/
+*.iws
+*.iml
+*.ipr
+
+!.idea/codeStyles/
+!.idea/httpRequests/
+!.idea/runConfigurations/
+!.idea/inspectionProfiles/
+!.idea/externalDependencies.xml
+!.idea/vcs.xml
+
+## VSCode
+.vscode/
+.history/
+.history
+.ionide
+
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+## Neovim
+.nvimrc
+
+## Python
+__pycache__/
+.ruff_cache/
+.mypy_cache/
+docs/_build/
+*.egg-info/
+build/
+dist/
+eggs/
+.eggs/
+venv/
+.venv/
+.env/
+*.py[cod]
+*$py.class
+pyrightconfig.json
+
+## Other files
+[Dd]esktop.ini
+[Tt]humbs.db
+.directory
+*~
