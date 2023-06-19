@@ -1,8 +1,15 @@
 System & Network Security Assignment
 ====================================
 
+Backend
+^^^^^^^
+
+.. code:: bash
+
+   cd backend
+
 Set up virtual environment
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: bash
 
@@ -10,16 +17,16 @@ Set up virtual environment
    source .venv/bin/activate
 
 Install project
-^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~
 
 .. code:: bash
 
    pip install -e .
 
 Create JWT keys
-^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~
 
 .. code:: bash
 
-   openssl genrsa -out keys/private-jwt.pem 4096
-   openssl rsa -in keys/private-jwt.pem -pubout -out keys/public-jwt.pem
+   openssl genrsa -out keys/private.pem 4096
+   openssl rsa -in keys/private.pem -pubout -out keys/public.pem
