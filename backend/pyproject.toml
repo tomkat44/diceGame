@@ -6,7 +6,6 @@ authors = [
     {name = "Ioannis Somos", email = "i.somos@aueb.gr"},
     {name = "Thomas Katsantas", email = "th.katsantas@aueb.gr"}
 ]
-readme = "README.rst"
 keywords = ["dice", "game"]
 classifiers = [
     "Environment :: Web Environment",
@@ -18,11 +17,12 @@ dependencies = [
     "django[argon2]~=4.2",
     "django-cors-headers~=4.1",
     "djangorestframework~=3.14",
-    "djangorestframework-simplejwt[crypto]~=5.2"
+    "djangorestframework-simplejwt[crypto]~=5.2",
+    "mysqlclient~=2.1",
+    "uwsgi~=2.0"
 ]
 
 [project.optional-dependencies]
-uwsgi = ["uwsgi"]
 dev = [
     "django-stubs~=4.2",
     "djangorestframework-stubs~=3.14"
@@ -34,6 +34,9 @@ Homepage = "https://gitlab.com/ObserverOfTime/netsec-assignment"
 [build-system]
 requires = ["setuptools>=58.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+exclude = ["keys"]
 
 [tool.mypy]
 plugins = [

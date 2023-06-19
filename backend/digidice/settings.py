@@ -11,25 +11,29 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from secrets import token_urlsafe
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+#: Build paths inside the project like this: ``BASE_DIR / ...``.
+BASE_DIR = Path(__file__).resolve().parents[1]
 
+key_file = BASE_DIR / 'keys' / 'secret.key'
+if not key_file.exists():
+    key_file.write_text(token_urlsafe(32))
+    key_file.chmod(0o600)
+#: | A secret key used to provide cryptographic signing.
+#: | SECURITY WARNING: this *must* be kept secret!
+SECRET_KEY = key_file.read_text().rstrip()
+del key_file
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+#: | A boolean that turns debug mode on/off.
+#: | SECURITY WARNING: don't turn this on in production!
+DEBUG = False
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2mh^d9^q5-@ug)szh2f))m%l!v&n@g8(ihw945eet!_sqjzz#g'
+#: A list of hosts that this site can serve.
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
-# Application definition
-
+#: A list of strings designating all applications
+#: that are enabled in this Django installation.
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,11 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
 ]
 
+#: A list of middleware to use.
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -49,8 +57,25 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+#: Database settings dictionary.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'GDPR',
+        'CHARSET': 'utf8mb4',
+        'OPTIONS': {
+            'read_default_file': str(BASE_DIR / '.my.cnf')
+        }
+    }
+}
+
+#: A string representing the full Python import path to the root URLconf.
 ROOT_URLCONF = 'digidice.urls'
 
+#: Store message data in the session.
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+#: A list containing the settings for all template engines to be used.
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -58,66 +83,114 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+            ]
+        }
+    }
 ]
 
+#: The full Python path of the WSGI application object for the built-in server.
 WSGI_APPLICATION = 'digidice.wsgi.application'
 
+#: The time zone of this installation.
+TIME_ZONE = 'Europe/Athens'
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
+#: Enable timezone-aware datetimes.
 USE_TZ = True
 
+#: Disable the translation system.
+USE_I18N = False
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+#: URL that handles the static files.
+STATIC_URL = '/static/'
 
-STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
+#: Default primary key field type.
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#: A list of hash functions that can be used for passwords.
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+]
+
+#: A list of validators that are used to check the strength of passwords.
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+]
+
+#: Store session data in the cache and persist to the database.
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+#: Expire the session when the user closes the browser.
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+#: Prevent the session cookie from being sent in cross-site requests.
+SESSION_COOKIE_SAMESITE = 'Strict'
+
+#: Prevent the CSRF cookie from being sent in cross-site requests.
+CSRF_COOKIE_SAMESITE = 'Strict'
+
+## TODO: enable HTTPS
+
+#: Redirect all non-HTTPS requests to HTTPS.
+# SECURE_SSL_REDIRECT = True
+
+#: HTTP header/value combination that signifies a secure request.
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+#: Ensure that the CSRF cookie is only sent with an HTTPS connection.
+# CSRF_COOKIE_SECURE = True
+
+#: Ensure that the session cookie is only sent with an HTTPS connection.
+# SESSION_COOKIE_SECURE = True
+
+#: A list of trusted origins for unsafe requests (e.g. POST).
+# CSRF_TRUSTED_ORIGINS = ['https://localhost']
+
+#: A list of origins that are authorized to make cross-site HTTP requests.
+# CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
+
+#: Restrict the CORS headers to the API.
+CORS_URLS_REGEX = r'^/api/.*$'
+
+#: A list of HTTP verbs that are allowed for the request.
+CORS_ALLOW_METHODS = ['OPTIONS', 'HEAD', 'GET', 'POST']
+
+#: Rest framework settings dictionary.
+#: See https://www.django-rest-framework.org/api-guide/settings/
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'login': '2/s',
+        'default': '5/s'
+    },
+    'URL_FORMAT_OVERRIDE': None
+}
+
+#: JWT settings dictionary.
+#: See https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
+SIMPLE_JWT = {
+    'UPDATE_LAST_LOGIN': True,
+    'ALGORITHM': 'RS256',
+    'SIGNING_KEY': (BASE_DIR / 'keys' / 'private.pem').read_text(),
+    'VERIFYING_KEY': (BASE_DIR / 'keys' / 'public.pem').read_text(),
+    'ISSUER': 'digidice'
+}

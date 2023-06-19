@@ -1,0 +1,3 @@
+include .my.cnf
+include keys/secret.key
+include keys/*.pem

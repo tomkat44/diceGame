@@ -8,12 +8,19 @@ Backend
 
    cd backend
 
+Set up MySQL database
+^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: bash
+
+   mysql -u root -p < initdb.sql
+
 Set up virtual environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: bash
 
-   python -mvenv .venv # only the first time
+   python -mvenv .venv
    source .venv/bin/activate
 
 Install project
@@ -22,6 +29,7 @@ Install project
 .. code:: bash
 
    pip install -e .
+   python manage.py migrate
 
 Create JWT keys
 ~~~~~~~~~~~~~~~
