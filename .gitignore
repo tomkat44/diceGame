@@ -42,6 +42,12 @@ venv/
 *$py.class
 pyrightconfig.json
 
+## Certificates
+*.pem
+*.key
+*.csr
+*.crt
+
 ## Other files
 [Dd]esktop.ini
 [Tt]humbs.db

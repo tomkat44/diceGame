@@ -10,27 +10,31 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from os import getenv
 from pathlib import Path
 from secrets import token_urlsafe
 
 #: Build paths inside the project like this: ``BASE_DIR / ...``.
 BASE_DIR = Path(__file__).resolve().parents[1]
 
+# Generate the key file if it doesn't exist
 key_file = BASE_DIR / 'keys' / 'secret.key'
 if not key_file.exists():
     key_file.write_text(token_urlsafe(32))
     key_file.chmod(0o600)
+
 #: | A secret key used to provide cryptographic signing.
 #: | SECURITY WARNING: this *must* be kept secret!
 SECRET_KEY = key_file.read_text().rstrip()
+
 del key_file
 
 #: | A boolean that turns debug mode on/off.
 #: | SECURITY WARNING: don't turn this on in production!
-DEBUG = False
+DEBUG = bool(getenv('DEBUG'))
 
 #: A list of hosts that this site can serve.
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.localhost', '127.0.0.1']
 
 #: A list of strings designating all applications
 #: that are enabled in this Django installation.
@@ -43,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'users',
 ]
 
 #: A list of middleware to use.
@@ -104,10 +109,16 @@ USE_TZ = True
 USE_I18N = False
 
 #: URL that handles the static files.
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
+
+#: The directory that contains static files.
+STATIC_ROOT = getenv('STATIC_ROOT', BASE_DIR / 'vendor' / 'static')
 
 #: Default primary key field type.
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#: The model to use to represent a user.
+AUTH_USER_MODEL = 'users.User'
 
 #: A list of hash functions that can be used for passwords.
 PASSWORD_HASHERS = [
@@ -166,24 +177,35 @@ CORS_ALLOW_METHODS = ['OPTIONS', 'HEAD', 'GET', 'POST']
 #: See https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.ScopedRateThrottle',
     ],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
     ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
     'DEFAULT_THROTTLE_RATES': {
-        'login': '2/s',
-        'default': '5/s'
+        'anon': '2/s',
+        'user': '5/s'
     },
     'URL_FORMAT_OVERRIDE': None
 }
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_PARSER_CLASSES'].append(
+        'rest_framework.parsers.MultiPartParser'
+    )
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
+        'rest_framework.renderers.BrowsableAPIRenderer'
+    )
 
 #: JWT settings dictionary.
 #: See https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html

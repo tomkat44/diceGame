@@ -30,6 +30,7 @@ Install project
 
    pip install -e .
    python manage.py migrate
+   python manage.py createsuperuser --username admin
 
 Create JWT keys
 ~~~~~~~~~~~~~~~

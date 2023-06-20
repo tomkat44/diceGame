@@ -16,8 +16,14 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.http import Http404
+from django.urls import include, path, re_path
+from django.views.defaults import page_not_found
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('api/', include('users.urls')),
+    path('djadmin/', admin.site.urls),
+    # HACK: disable built-in authentication urls
+    re_path('^accounts/', page_not_found, {'exception': Http404()}),
 ]
