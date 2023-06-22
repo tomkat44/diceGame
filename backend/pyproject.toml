@@ -15,10 +15,10 @@ classifiers = [
 requires-python = ">=3.8"
 dependencies = [
     "django[argon2]~=4.2",
-    "django-cors-headers~=4.1",
     "djangorestframework~=3.14",
     "djangorestframework-simplejwt[crypto]~=5.2",
-    "mysqlclient~=2.1"
+    "mysqlclient~=2.1",
+    "uwsgi~=2.0"
 ]
 
 [project.optional-dependencies]

@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'corsheaders',
     'users',
 ]
 
@@ -54,8 +53,8 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'digidice.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -147,31 +146,20 @@ SESSION_COOKIE_SAMESITE = 'Strict'
 #: Prevent the CSRF cookie from being sent in cross-site requests.
 CSRF_COOKIE_SAMESITE = 'Strict'
 
-## TODO: enable HTTPS
-
 #: Redirect all non-HTTPS requests to HTTPS.
-# SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = True
 
 #: HTTP header/value combination that signifies a secure request.
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 #: Ensure that the CSRF cookie is only sent with an HTTPS connection.
-# CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 #: Ensure that the session cookie is only sent with an HTTPS connection.
-# SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 #: A list of trusted origins for unsafe requests (e.g. POST).
-# CSRF_TRUSTED_ORIGINS = ['https://localhost']
-
-#: A list of origins that are authorized to make cross-site HTTP requests.
-# CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
-
-#: Restrict the CORS headers to the API.
-CORS_URLS_REGEX = r'^/api/.*$'
-
-#: A list of HTTP verbs that are allowed for the request.
-CORS_ALLOW_METHODS = ['OPTIONS', 'HEAD', 'GET', 'POST']
+CSRF_TRUSTED_ORIGINS = ['https://frontend.localhost']
 
 #: Rest framework settings dictionary.
 #: See https://www.django-rest-framework.org/api-guide/settings/
