@@ -17,11 +17,11 @@ dependencies = [
     "django[argon2]~=4.2",
     "djangorestframework~=3.14",
     "djangorestframework-simplejwt[crypto]~=5.2",
-    "mysqlclient~=2.1",
-    "uwsgi~=2.0"
+    "mysqlclient~=2.1"
 ]
 
 [project.optional-dependencies]
+uwsgi = ["uwsgi~=2.0"]
 dev = [
     "django-stubs~=4.2",
     "djangorestframework-stubs~=3.14"

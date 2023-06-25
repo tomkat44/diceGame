@@ -42,6 +42,10 @@ venv/
 *$py.class
 pyrightconfig.json
 
+## Vagrant
+.vagrant/
+vagrant-shell*
+
 ## Certificates
 *.pem
 *.key

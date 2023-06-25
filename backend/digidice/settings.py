@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 key_file = BASE_DIR / 'keys' / 'secret.key'
 if not key_file.exists():
     key_file.write_text(token_urlsafe(32))
-    key_file.chmod(0o600)
+    key_file.chmod(0o400)
 
 #: | A secret key used to provide cryptographic signing.
 #: | SECURITY WARNING: this *must* be kept secret!

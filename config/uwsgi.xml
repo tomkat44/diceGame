@@ -3,13 +3,13 @@
     <pcre-jit>true</pcre-jit>
     <thunder-lock>true</thunder-lock>
     <enable-threads>true</enable-threads>
-    <processes>3</processes>
+    <processes>2</processes>
     <uid>www-data</uid>
     <gid>www-data</gid>
     <chdir>/var/www/html/digidice/backend</chdir>
     <virtualenv>%(chdir)/.venv</virtualenv>
-    <safe-pidfile>/var/run/www-data/uwsgi.pid</safe-pidfile>
-    <socket>/var/run/www-data/uwsgi.sock</socket>
+    <safe-pidfile>/var/run/uwsgi/uwsgi.pid</safe-pidfile>
+    <socket>/var/run/uwsgi/uwsgi.sock</socket>
     <daemonize>/var/log/apache2/uwsgi.log</daemonize>
     <wsgi-file>digidice/wsgi.py</wsgi-file>
     <disable-write-exception>true</disable-write-exception>
