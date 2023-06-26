@@ -22,6 +22,11 @@ dependencies = [
 
 [project.optional-dependencies]
 uwsgi = ["uwsgi~=2.0"]
+local = [
+    "django-extensions~=3.2",
+    "pyopenssl~=23.2",
+    "werkzeug~=2.3"
+]
 dev = [
     "django-stubs~=4.2",
     "djangorestframework-stubs~=3.14"

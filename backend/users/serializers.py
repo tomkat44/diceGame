@@ -1,4 +1,6 @@
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.password_validation import validate_password
+
 from rest_framework.serializers import ModelSerializer
 
 from .models import User
@@ -6,6 +8,11 @@ from .models import User
 
 class UserSerializer(ModelSerializer):
     """Serializer for :class:`User` objects."""
+
+    def validate_password(self, value: str) -> str:
+        """Ensures the password adheres to the policy."""
+        validate_password(value)
+        return value
 
     def create(self, validated_data: dict) -> User:
         """Ensures the password is hashed when added to the database."""

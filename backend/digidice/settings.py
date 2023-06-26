@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from importlib.util import find_spec
 from os import getenv
 from pathlib import Path
 from secrets import token_urlsafe
@@ -48,6 +49,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
 ]
+if DEBUG and find_spec('django_extensions'):
+    INSTALLED_APPS.append('django_extensions')
 
 #: A list of middleware to use.
 MIDDLEWARE = [
@@ -128,10 +131,9 @@ PASSWORD_HASHERS = [
 
 #: A list of validators that are used to check the strength of passwords.
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {'NAME': 'users.validators.MinimumEntropyValidator'},
 ]
 
 #: Store session data in the cache and persist to the database.
@@ -188,10 +190,10 @@ REST_FRAMEWORK = {
     'URL_FORMAT_OVERRIDE': None
 }
 if DEBUG:
-    REST_FRAMEWORK['DEFAULT_PARSER_CLASSES'].append(
+    REST_FRAMEWORK['DEFAULT_PARSER_CLASSES'].append(  # type: ignore
         'rest_framework.parsers.MultiPartParser'
     )
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(  # type: ignore
         'rest_framework.renderers.BrowsableAPIRenderer'
     )
 
