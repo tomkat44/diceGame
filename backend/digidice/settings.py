@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
 from importlib.util import find_spec
 from os import getenv
 from pathlib import Path
@@ -204,5 +205,6 @@ SIMPLE_JWT = {
     'ALGORITHM': 'RS256',
     'SIGNING_KEY': (BASE_DIR / 'keys' / 'private.pem').read_text(),
     'VERIFYING_KEY': (BASE_DIR / 'keys' / 'public.pem').read_text(),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
     'ISSUER': 'digidice'
 }
