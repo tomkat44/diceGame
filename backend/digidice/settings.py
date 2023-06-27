@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
+from importlib.util import find_spec
 from os import getenv
 from pathlib import Path
 from secrets import token_urlsafe
@@ -21,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 key_file = BASE_DIR / 'keys' / 'secret.key'
 if not key_file.exists():
     key_file.write_text(token_urlsafe(32))
-    key_file.chmod(0o600)
+    key_file.chmod(0o400)
 
 #: | A secret key used to provide cryptographic signing.
 #: | SECURITY WARNING: this *must* be kept secret!
@@ -46,16 +48,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'corsheaders',
     'users',
 ]
+if DEBUG and find_spec('django_extensions'):
+    INSTALLED_APPS.append('django_extensions')
 
 #: A list of middleware to use.
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'digidice.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -129,10 +132,9 @@ PASSWORD_HASHERS = [
 
 #: A list of validators that are used to check the strength of passwords.
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {'NAME': 'users.validators.MinimumEntropyValidator'},
 ]
 
 #: Store session data in the cache and persist to the database.
@@ -147,31 +149,20 @@ SESSION_COOKIE_SAMESITE = 'Strict'
 #: Prevent the CSRF cookie from being sent in cross-site requests.
 CSRF_COOKIE_SAMESITE = 'Strict'
 
-## TODO: enable HTTPS
-
 #: Redirect all non-HTTPS requests to HTTPS.
-# SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = True
 
 #: HTTP header/value combination that signifies a secure request.
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 #: Ensure that the CSRF cookie is only sent with an HTTPS connection.
-# CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 #: Ensure that the session cookie is only sent with an HTTPS connection.
-# SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 #: A list of trusted origins for unsafe requests (e.g. POST).
-# CSRF_TRUSTED_ORIGINS = ['https://localhost']
-
-#: A list of origins that are authorized to make cross-site HTTP requests.
-# CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
-
-#: Restrict the CORS headers to the API.
-CORS_URLS_REGEX = r'^/api/.*$'
-
-#: A list of HTTP verbs that are allowed for the request.
-CORS_ALLOW_METHODS = ['OPTIONS', 'HEAD', 'GET', 'POST']
+CSRF_TRUSTED_ORIGINS = ['https://frontend.localhost']
 
 #: Rest framework settings dictionary.
 #: See https://www.django-rest-framework.org/api-guide/settings/
@@ -200,10 +191,10 @@ REST_FRAMEWORK = {
     'URL_FORMAT_OVERRIDE': None
 }
 if DEBUG:
-    REST_FRAMEWORK['DEFAULT_PARSER_CLASSES'].append(
+    REST_FRAMEWORK['DEFAULT_PARSER_CLASSES'].append(  # type: ignore
         'rest_framework.parsers.MultiPartParser'
     )
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(  # type: ignore
         'rest_framework.renderers.BrowsableAPIRenderer'
     )
 
@@ -214,5 +205,6 @@ SIMPLE_JWT = {
     'ALGORITHM': 'RS256',
     'SIGNING_KEY': (BASE_DIR / 'keys' / 'private.pem').read_text(),
     'VERIFYING_KEY': (BASE_DIR / 'keys' / 'public.pem').read_text(),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
     'ISSUER': 'digidice'
 }

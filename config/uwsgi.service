@@ -1,0 +1,17 @@
+[Unit]
+Description=DigiDice uWSGI
+After=syslog.target
+
+[Service]
+ExecStart=/var/www/html/digidice/backend/.venv/bin/uwsgi \
+              --xml /var/www/html/digidice/config/uwsgi.xml
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
+
+# vim:ft=systemd:
