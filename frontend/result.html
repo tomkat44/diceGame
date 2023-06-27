@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dice Game - Result</title>
+</head>
+<body>
+    <h1>Dice Game - Result</h1>
+    <p>Your roll: {{ player_roll }}</p>
+    <p>Server's roll: {{ server_roll }}</p>
+    <p>{{ result }}</p>
+    <form action="/roll_dice" method="POST">
+        <button type="submit">Roll Dice</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hash-wasm@4"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="css/pico.min.css">
+    <script type="text/javascript" src="functions.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
+  </head>
+  <body>
+
+    <main class="container" style="width: 50%; align-items: center;">
+      <nav>
+        <ul>
+          <li></li>
+        </ul>
+        <ul>
+          <li>
+            <hgroup>
+            <h1>Dice Game!</h1>
+            <h3>Play with safe and fairness</h3>
+          </hgroup>
+        </li>  
+        </ul>
+        <ul>
+          <li><a href="./login.html" class="secondary">Logout</a></li>
+        </ul>
+      </nav>
+        
+        <div class="grid">
+          <h2 id="result-field"></h2>
+        </div>
+
+        <form >  
+            <!-- Grid -->
+            <div class="grid" >
+          
+              <!-- Markup example 1: input is inside label -->
+              
+                <label for="client-dice-img"> 
+                  <h4>Your Dice</h4>
+                  <img id="client-dice-img"  alt="Dice" />
+                </label>
+                    
+              <label for="server-dice-img">
+                <h4 >Server Dice</h4>
+                <img id="server-dice-img"  alt="Dice" />
+                <div type="img" id="server-dice-img"></div>
+              </label>    
+              </div>
+          <br>
+            <!-- Button -->
+            <button type="button" id="roll-button"  onclick="clientSendHashes()">ROLL DICE</button>
+          
+      
+            <details>
+              <summary type="button" role="button" class="secondary" onclick="printResults()">Details</summary>
+              <!-- <input type="button" value="Details" class="secondary" onclick="generateTable()"></input> -->
+
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col"></th>
+                    <th scope="col" style="color: mediumseagreen;"><strong>Client Dice</strong></th>                                  
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Chosen x</th>
+                    <td><div type="text" id="client-choose-x"></div></td>                    
+                  </tr>
+                  <tr>
+                    <th scope="row">Chosen h(x)</th>
+                    <td ><div type="text" id="client-choose-hx"></div></td>                                      
+                  </tr>
+                  <tr>
+                    <th scope="row"></th>
+                    <td>XOR</td>                    
+                  </tr>
+                  <tr>
+                    <th scope="row">Given x</th>
+                    <td><div type="text" id="client-given-x"></div></td>                                       
+                  </tr>
+                  <tr>
+                    <th scope="row">Given h(x)</th>
+                    <td><div type="text" id="client-given-hx"></div></td>                                      
+                  </tr>
+                  <tr>
+                    <th scope="row"></th>
+                    <td>MOD 6 </td>                    
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th scope="col" >RESULT</th>
+                    <td scope="col"><div type="text" id="client-dice-result"></div></td>                   
+                  </tr>
+                </tfoot>
+                </table>
+
+                <p>################################################################</p>
+
+                <table>
+                <thead>
+                  <tr>
+                    <th scope="col"></th>
+                    <th scope="col" style="color: mediumseagreen;"><strong>Server Dice</strong></th>                                  
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Chosen x</th>
+                    <td><div type="text" id="server-choose-x"></div></td>                    
+                  </tr>
+                  <tr>
+                    <th scope="row">Chosen h(x)</th>
+                    <td ><div type="text" id="server-choose-hx"></div></td>                                      
+                  </tr>
+                  <tr>
+                    <th scope="row"></th>
+                    <td>XOR</td>                    
+                  </tr>
+                  <tr>
+                    <th scope="row">Given x</th>
+                    <td><div type="text" id="server-given-x"></div></td>                                       
+                  </tr>
+                  <tr>
+                    <th scope="row">Given h(x)</th>
+                    <td><div type="text" id="server-given-hx"></div></td>                                      
+                  </tr>
+                  <tr>
+                    <th scope="row"></th>
+                    <td>MOD 6 </td>                    
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th scope="col" >RESULT</th>
+                    <td scope="col"><div type="text" id="server-dice-result"></div></td>                   
+                  </tr>
+                </tfoot>
+                </table>
+            </details>
+                
+
+          </form>
+  
+
+          <script >window.onload = firstLoad();</script>  
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  </body>
+</html>
