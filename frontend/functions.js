@@ -130,8 +130,13 @@ function printResults(){
     var serverGiveHx = document.getElementById('server-given-hx');
     serverGiveHx.textContent = localStorage.getItem("serverToClientHash");
     
-    var serverResult = ((parseInt(localStorage.getItem("serverToServerUnhashed")) ^ parseInt(localStorage.getItem("clientToServerUnhashed"))) % 6)+1;
-    var serverDiceResult = document.getElementById('server-dice-result');
+    const serverToServerUnhash = localStorage.getItem("serverToServerUnhashed");
+    alert(serverToServerUnhash);
+    const clientToServerUnhashed = localStorage.getItem("clientToServerUnhashed");
+    alert(clientToServerUnhashed);
+    const serverResult = (((serverToServerUnhash ^ clientToServerUnhashed) % 6)+1);
+    alert(typeof serverResult);
+    const serverDiceResult = document.getElementById('server-dice-result');
     serverDiceResult.textContent = serverResult;
 }
 

@@ -5,3 +5,7 @@ body {
 image{
     text-align: center;
 }
+
+.progress-bar {
+  border-radius: 5px;
+}

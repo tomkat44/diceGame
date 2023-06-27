@@ -16,15 +16,15 @@
     <main class="container" style="width: 50%; align-items: center;">
       <nav>
         <ul>
-          <li></li>
+          
         </ul>
         <ul>
-          <li>
+          
             <hgroup>
             <h1>Dice Game!</h1>
             <h3>Play with safe and fairness</h3>
           </hgroup>
-        </li>  
+         
         </ul>
         <ul>
           <li><a href="./login.html" class="secondary">Logout</a></li>
@@ -56,8 +56,10 @@
             <!-- Button -->
             <button type="button" id="roll-button"  onclick="clientSendHashes()">ROLL DICE</button>
           
-      
-            <details>
+            <nav>
+              <ul>
+               
+            <details role="list">
               <summary type="button" role="button" class="secondary" onclick="printResults()">Details</summary>
               <!-- <input type="button" value="Details" class="secondary" onclick="generateTable()"></input> -->
 
@@ -146,11 +148,25 @@
                 </table>
             </details>
                 
+                </ul>
+                </nav>
 
           </form>
   
 
           <script >window.onload = firstLoad();</script>  
         <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+        <footer>
+          <nav>
+            <ul>
+              </ul>
+              <ul>
+                <cite>Copyright &#169 2023</cite>
+                </ul>
+                </nav>
+    
+            
+          </footer>
   </body>
 </html>
