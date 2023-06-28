@@ -12,14 +12,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import Response
 
-from .serializers import (
-    CommitRollSerializer, HashesSerializer, IntegersSerializer, RevealRollSerializer
-)
+from .serializers import CommitRollSerializer, IntegersSerializer, RevealRollSerializer
 
 
-def _hash_int(value: int) -> str:
-    """Hashes an integer value with SHA3-256."""
-    return sha3_256(str(value).encode()).hexdigest()
+def _hash_ints(a: int, b: int) -> str:
+    """Concatenates and hashes two integers with SHA3-256."""
+    return sha3_256((str(a) + str(b)).encode()).hexdigest()
 
 
 def _cmp_ints(a: int, b: int) -> int:
@@ -46,7 +44,13 @@ class CommitRollView(GenericAPIView):
     serializer_class = CommitRollSerializer
     permission_classes = [IsAuthenticated]
 
+    def check_permissions(self, request: Request):
+        """Allows unauthenticated OPTIONS requests."""
+        if request.method != 'OPTIONS':
+            super().check_permissions(request)
+
     def post(self, request: Request, format: Optional[str] = None) -> Response:
+        """Receives and handles POST request from the client."""
         # validate received data
         serializer = CommitRollSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -56,10 +60,7 @@ class CommitRollView(GenericAPIView):
             raise RerollException()
         # generate and hash random numbers
         rand_client, rand_server = randbits(64), randbits(64)
-        serializer.validated_data['server_hashes'] = {
-            'client': _hash_int(rand_client),
-            'server': _hash_int(rand_server)
-        }
+        serializer.validated_data['server_hash'] = _hash_ints(rand_client, rand_server)
         # save data to the cache
         cache.set_many({
             f'rand_client_{username}': rand_client,
@@ -78,17 +79,13 @@ class RevealRollView(GenericAPIView):
         """Computes a die roll from two numbers via XOR."""
         return (a ^ b) % 6 + 1
 
-    def _verify(self, client_int: int, server_int: int, client_hash: str, server_hash: str):
-        """Verifies that the received integers match the cached hashes."""
-        errors = {'client_integers': {}}
-        if (client_new_hash := _hash_int(client_int)) != client_hash:
-            errors['client_integers']['client'] = f'Expected {client_hash}, got {client_new_hash}'
-        if (server_new_hash := _hash_int(server_int)) != server_hash:
-            errors['client_integers']['server'] = f'Expected {server_hash}, got {server_new_hash}'
-        if len(errors['client_integers']) > 0:
-            raise ValidationError(errors, code='hash_mismatch')
+    def check_permissions(self, request: Request):
+        """Allows unauthenticated OPTIONS requests."""
+        if request.method != 'OPTIONS':
+            super().check_permissions(request)
 
     def post(self, request: Request, format: Optional[str] = None) -> Response:
+        """Receives and handles POST request from the client."""
         # validate received data
         serializer = RevealRollSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -103,9 +100,11 @@ class RevealRollView(GenericAPIView):
         # verify the client's numbers
         client_int: int = serializer.validated_data['client_integers']['client']
         server_int: int = serializer.validated_data['client_integers']['server']
-        client_hash: str = commit_data['client_hashes']['client']
-        server_hash: str = commit_data['client_hashes']['server']
-        self._verify(client_int, server_int, client_hash, server_hash)
+        client_hash: str = commit_data['client_hash']
+        check_hash = _hash_ints(client_int, server_int)
+        if check_hash != client_hash:
+            error = {'client_integers': f'Expected {client_hash}, got {check_hash}'}
+            raise ValidationError(error, code='hash_mismatch')
         # reveal the server's numbers
         serializer.validated_data['server_integers'] = {
             'client': rand_client,

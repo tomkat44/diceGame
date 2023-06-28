@@ -21,9 +21,13 @@ form.addEventListener('submit', async (evt) => {
     })
     const data = await res.json();
 
-    // Save token & redirect to game if OK
     if (res.ok) {
+        // Save the token to the session storage
+        // NOTE: the session storage gets cleared on exit
         sessionStorage.setItem('token', data.access);
+        // Manually clear the token when it expires
+        setTimeout(() => sessionStorage.removeItem('token'), 3.6e6);
+        // Redirect to the game
         location.href = '/index.html';
     }
 

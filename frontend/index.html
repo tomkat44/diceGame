@@ -1,12 +1,159 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Dice Game</title>
-</head>
-<body>
-    <h1>Dice Game</h1>
-    <form action="/roll_dice" method="POST">
-        <button type="submit">Roll Dice</button>
-    </form>
-</body>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="Thomas Katsantas, Ioannis Somos">
+        <link rel="stylesheet" href="/vendor/pico/pico.min.css" type="text/css">
+        <link rel="stylesheet" href="/styles.css" type="text/css">
+        <script src="/vendor/hash-wasm/sha3.umd.min.js"
+                type="application/javascript" async></script>
+        <script type="module" src="/game.js" defer></script>
+        <title>Digi-Dice</title>
+    </head>
+    <body>
+        <main class="container">
+            <hgroup>
+                <h1>Digi-Dice</h1>
+                <h3>Fair digital dice</h3>
+                <hr/>
+            </hgroup>
+            <article id="roll-dice">
+                <h4 id="roll-result">Ready to roll</h4>
+                <section>
+                <div class="grid">
+                    <div>
+                        <div><b>You rolled</b></div>
+                        <br/>
+                        <img id="client-roll-img" height="400" width="400" alt="Dice" src="/dice_images/dice-0.png">
+                    </div>
+                    <div>
+                        <div><b>The server rolled</b></div>
+                        <br/>
+                        <img id="server-roll-img" height="400" width="400" alt="Dice" src="/dice_images/dice-0.png">
+                    </div>
+                </div>
+                </section>
+                <button type="button" id="roll-button">ROLL</button>
+            </article>
+            <details>
+                <summary class="secondary">Details</summary>
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col"><ins><b>Client Roll</b></ins></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Chosen <code>r</code></th>
+                            <td>
+                                <div id="client-choose-r"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Chosen <code>h(r)</code></th>
+                            <td>
+                                <div id="client-choose-hr"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"></th>
+                            <td><small>XOR</small></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Given <code>r</code></th>
+                            <td>
+                                <div id="client-given-r"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Given <code>h(r)</code></th>
+                            <td>
+                                <div id="client-given-hr"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"></th>
+                            <td><small>MOD 6</small></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th scope="col"><b>RESULT</b></th>
+                            <td scope="col">
+                                <div id="client-roll-result"></div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <hr/>
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col"><ins><b>Server Roll</b></ins></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Chosen <code>r</code></th>
+                            <td>
+                                <div id="server-choose-r"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Chosen <code>h(r)</code></th>
+                            <td>
+                                <div id="server-choose-hr"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"></th>
+                            <td><small>XOR</small></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Given <code>r</code></th>
+                            <td>
+                                <div id="server-given-r"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Given <code>h(r)</code></th>
+                            <td>
+                                <div id="server-given-hr"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"></th>
+                            <td><small>MOD 6</small></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th scope="col"><b>RESULT</b></th>
+                            <td scope="col">
+                                <div id="server-result"></div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </details>
+            <br/>
+            <footer>
+                <a href="/login.html" class="secondary" role="button">Logout</a>
+                <em>AUEB MSCIS 2023</em>
+            </footer>
+            <dialog id="modal">
+                <article>
+                    <header>
+                        <a href="#" aria-label="Close" class="close"></a>
+                        <b class="title">Error</b>
+                    </header>
+                    <p class="body"></p>
+                </article>
+            </dialog>
+        </main>
+    </body>
 </html>

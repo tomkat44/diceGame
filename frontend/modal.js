@@ -2,7 +2,7 @@
  * The modal element.
  * @type {HTMLDialogElement}
  */
-const modal = document.querySelector('dialog');
+const modal = document.getElementById('modal');
 
 /** Toggles the `modal-is-open` class when the modal is opened or closed. */
 const toggleClass = () =>
@@ -16,10 +16,10 @@ modal.querySelector('.close').addEventListener('click', () => modal.close());
 /**
  * Displays a modal with the given body.
  *
- * @param {string} body the text content of the modal
+ * @param {string} body the content of the modal
  */
 export function display(body) {
-    modal.querySelector('.body').textContent = body;
+    modal.querySelector('.body').innerHTML = body;
     modal.showModal();
     toggleClass();
 }

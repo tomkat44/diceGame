@@ -1,4 +1,5 @@
 from re import compile as regex
+from typing import Any
 
 from django.core.validators import RegexValidator
 
@@ -23,3 +24,7 @@ class UInt64Field(IntegerField):
         kwargs.setdefault('min_value', 0)
         kwargs.setdefault('max_value', 2 ** 64 - 1)
         super().__init__(**kwargs)
+
+    def to_representation(self, value: Any) -> Any:
+        """Represents the integer as a string for JavaScript."""
+        return str(value)
