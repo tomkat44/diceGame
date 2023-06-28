@@ -110,9 +110,9 @@ function printResults(){
     var clientChooseHx = document.getElementById('client-choose-hx');
     clientChooseHx.textContent = localStorage.getItem("clientToClientHash");
     var clientGiveX = document.getElementById('client-given-x');
-    clientGiveX.textContent = localStorage.getItem("clientToServerUnhashed");
+    clientGiveX.textContent = localStorage.getItem("serverToClientUnhashed");
     var clientGiveHx = document.getElementById('client-given-hx');
-    clientGiveHx.textContent = localStorage.getItem("clientToServerHash");
+    clientGiveHx.textContent = localStorage.getItem("serverToClientHash");
     
     
     var clientResult = ((parseInt(localStorage.getItem("clientToClientUnhashed")) ^ parseInt(localStorage.getItem("serverToClientUnhashed"))) % 6)+1;
@@ -126,9 +126,9 @@ function printResults(){
     var serverChooseHx = document.getElementById('server-choose-hx');
     serverChooseHx.textContent = localStorage.getItem("serverToServerHash");
     var serverGiveX = document.getElementById('server-given-x');
-    serverGiveX.textContent = localStorage.getItem("serverToClientUnhashed");
+    serverGiveX.textContent = localStorage.getItem("clientToServerUnhashed");
     var serverGiveHx = document.getElementById('server-given-hx');
-    serverGiveHx.textContent = localStorage.getItem("serverToClientHash");
+    serverGiveHx.textContent = localStorage.getItem("clientToServerHash");
     
     const serverToServerUnhash = localStorage.getItem("serverToServerUnhashed");
     alert(serverToServerUnhash);
