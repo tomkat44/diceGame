@@ -4,11 +4,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="author" content="Thomas Katsantas, Ioannis Somos">
-        <link rel="stylesheet" href="/vendor/pico/pico.min.css" type="text/css">
-        <link rel="stylesheet" href="/styles.css" type="text/css">
-        <script src="/vendor/hash-wasm/sha3.umd.min.js"
+        <link rel="stylesheet" href="vendor/pico/pico.min.css" type="text/css">
+        <link rel="stylesheet" href="styles.css" type="text/css">
+        <script src="vendor/hash-wasm/sha3.umd.min.js"
                 type="application/javascript" async></script>
-        <script type="module" src="/game.js" defer></script>
+        <script type="module" src="game.js" defer></script>
         <title>Digi-Dice</title>
     </head>
     <body>
@@ -25,12 +25,12 @@
                     <div>
                         <div><b>You rolled</b></div>
                         <br/>
-                        <img id="client-roll-img" height="400" width="400" alt="Dice" src="/dice_images/dice-0.png">
+                        <img id="client-roll-img" height="400" width="400" alt="Dice" src="dice_images/dice-0.png">
                     </div>
                     <div>
                         <div><b>The server rolled</b></div>
                         <br/>
-                        <img id="server-roll-img" height="400" width="400" alt="Dice" src="/dice_images/dice-0.png">
+                        <img id="server-roll-img" height="400" width="400" alt="Dice" src="dice_images/dice-0.png">
                     </div>
                 </div>
                 </section>
@@ -47,33 +47,29 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th scope="row">Chosen <code>r</code></th>
-                            <td>
-                                <div id="client-choose-r"></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Chosen <code>h(r)</code></th>
+                            <th scope="row">Send <code>h(r)</code></th>
                             <td>
                                 <div id="client-choose-hr"></div>
                             </td>
                         </tr>
                         <tr>
+                            <th scope="row">Chose <code>r</code></th>
+                            <td>
+                                <div id="client-choose-r"></div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
                             <th scope="row"></th>
                             <td><small>XOR</small></td>
                         </tr>
                         <tr>
-                            <th scope="row">Given <code>r</code></th>
+                            <th scope="row">Received <code>r</code></th>
                             <td>
                                 <div id="client-given-r"></div>
                             </td>
                         </tr>
-                        <tr>
-                            <th scope="row">Given <code>h(r)</code></th>
-                            <td>
-                                <div id="client-given-hr"></div>
-                            </td>
-                        </tr>
+                       
                         <tr>
                             <th scope="row"></th>
                             <td><small>MOD 6</small></td>
@@ -98,32 +94,29 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th scope="row">Chosen <code>r</code></th>
+                            <th scope="row">Send <code>h(r)</code></th>
+                            <td>
+                                <div id="client-choose-hr"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Chose <code>r</code></th>
                             <td>
                                 <div id="server-choose-r"></div>
                             </td>
                         </tr>
-                        <tr>
-                            <th scope="row">Chosen <code>h(r)</code></th>
-                            <td>
-                                <div id="server-choose-hr"></div>
-                            </td>
-                        </tr>
+                        
                         <tr>
                             <th scope="row"></th>
                             <td><small>XOR</small></td>
                         </tr>
                         <tr>
-                            <th scope="row">Given <code>r</code></th>
+                            <th scope="row">Received <code>r</code></th>
                             <td>
                                 <div id="server-given-r"></div>
                             </td>
                         </tr>
-                        <tr>
-                            <th scope="row">Given <code>h(r)</code></th>
-                            <td>
-                                <div id="server-given-hr"></div>
-                            </td>
+                        
                         </tr>
                         <tr>
                             <th scope="row"></th>
