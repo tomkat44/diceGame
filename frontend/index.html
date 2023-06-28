@@ -14,7 +14,7 @@
     <body>
         <main class="container">
             <aside>
-                <a href="/login.html" class="secondary">Logout</a>
+                <a href="login.html" id="logout" class="secondary">Logout</a>
             </aside>
             <hgroup>
                 <h1>Digi-Dice</h1>
@@ -26,14 +26,12 @@
                 <section>
                 <div class="grid">
                     <div>
-                        <div><b>You rolled</b></div>
-                        <br/>
-                        <img id="client-roll-img" height="400" width="400" alt="Dice" src="dice_images/dice-0.png">
+                        <div><b>You rolled</b></div><br/>
+                        <img id="client-roll-img" alt="Dice" src="dice_images/dice-0.png">
                     </div>
                     <div>
-                        <div><b>The server rolled</b></div>
-                        <br/>
-                        <img id="server-roll-img" height="400" width="400" alt="Dice" src="dice_images/dice-0.png">
+                        <div><b>The server rolled</b></div><br/>
+                        <img id="server-roll-img" alt="Dice" src="dice_images/dice-0.png">
                     </div>
                 </div>
                 </section>
@@ -50,23 +48,32 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th scope="row">Sent <code>h(r)</code></th>
+                            <th scope="row">
+                                <span>Sent</span>
+                                <math><mrow>h(<msub><mi>r</mi><mi>c</mi></msub>)</mrow></math>
+                            </th>
                             <td>
                                 <div id="client-sent-hr"></div>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Chose <code>r</code></th>
+                            <th scope="row">
+                                <span>Chose</span>
+                                <math><mrow><msub><mi>r</mi><mi>c</mi></msub></mrow></math>
+                            </th>
                             <td>
                                 <div id="client-chosen-r"></div>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row"></th>
-                            <td><small>XOR</small></td>
+                            <td>&nbsp;<math><mrow>XOR</mrow></math></td>
                         </tr>
                         <tr>
-                            <th scope="row">Received <code>r</code></th>
+                            <th scope="row">
+                                <span>Received</span>
+                                <math><mrow><msub><mi>r</mi><mi>c</mi></msub></mrow></math>
+                            </th>
                             <td>
                                 <div id="client-received-r"></div>
                             </td>
@@ -74,7 +81,7 @@
 
                         <tr>
                             <th scope="row"></th>
-                            <td><small>MOD 6</small></td>
+                            <td><math><mrow><mo>MOD</mo><mn>6</mn></mrow></math></td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -96,13 +103,19 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th scope="row">Sent <code>h(r)</code></th>
+                            <th scope="row">
+                                <span>Sent</span>
+                                <math><mrow>h(<msub><mi>r</mi><mi>s</mi></msub>)</mrow></math>
+                            </th>
                             <td>
                                 <div id="server-sent-hr"></div>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Chose <code>r</code></th>
+                            <th scope="row">
+                                <span>Chose</span>
+                                <math><mrow><msub><mi>r</mi><mi>s</mi></msub></mrow></math>
+                            </th>
                             <td>
                                 <div id="server-chosen-r"></div>
                             </td>
@@ -110,17 +123,20 @@
 
                         <tr>
                             <th scope="row"></th>
-                            <td><small>XOR</small></td>
+                            <td>&nbsp;<math><mrow>XOR</mrow></math></td>
                         </tr>
                         <tr>
-                            <th scope="row">Received <code>r</code></th>
+                            <th scope="row">
+                                <span>Received</span>
+                                <math><mrow><msub><mi>r</mi><mi>s</mi></msub></mrow></math>
+                            </th>
                             <td>
                                 <div id="server-received-r"></div>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row"></th>
-                            <td><small>MOD 6</small></td>
+                            <td><math><mrow><mo>MOD</mo><mn>6</mn></mrow></math></td>
                         </tr>
                     </tbody>
                     <tfoot>

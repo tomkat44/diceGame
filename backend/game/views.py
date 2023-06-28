@@ -76,7 +76,7 @@ class RevealRollView(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def _compute(self, a: int, b: int) -> int:
-        """Computes a die roll from two numbers via XOR."""
+        """Computes a dice roll from two numbers via XOR."""
         return (a ^ b) % 6 + 1
 
     def check_permissions(self, request: Request):

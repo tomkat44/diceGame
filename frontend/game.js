@@ -28,7 +28,7 @@ const serverResult = document.getElementById('server-result');
 const cmp = (a, b) => (a > b) - (a < b);
 
 /**
- * Computes a die roll from two numbers via XOR.
+ * Computes a dice roll from two numbers via XOR.
  * @param {BigInt} ra the first number
  * @param {string} rb the second number (as a string)
  * @returns {number} a value from 1~6
@@ -43,6 +43,7 @@ function showErrors(data) {
     if ('detail' in data) {
         display(data.detail);
     } else if ('messages' in data) {
+        // TODO: escape HTML or use `document.createElement`
         const divs = Array.from(data.messages, (msg) => `<div>${msg}</div>`);
         display(divs.join('\n'));
     } else {
@@ -51,6 +52,9 @@ function showErrors(data) {
         display(divs.join('\n'));
     }
 }
+
+document.getElementById('logout')
+  .addEventListener('click', () => sessionStorage.removeItem('token'));
 
 document.getElementById('roll-button').addEventListener('click', async (evt) => {
     // Start the dice roll
@@ -138,7 +142,7 @@ document.getElementById('roll-button').addEventListener('click', async (evt) => 
         serverReceivedR.textContent = rand2;
         clientSentHr.textContent = clientHash;
         serverSentHr.textContent = serverHash;
-        clientResult.textContent = clientRoll;
-        serverResult.textContent = serverRoll;
-    }, 1000);
+        clientResult.textContent = String.fromCharCode(0x267F + clientRoll);
+        serverResult.textContent = String.fromCharCode(0x267F + serverRoll);
+    }, 500);
 });

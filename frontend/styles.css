@@ -2,6 +2,10 @@ main {
     text-align: center;
 }
 
+aside {
+    text-align: right;
+}
+
 footer > em {
     float: right;
     font-size: smaller;
@@ -11,8 +15,16 @@ footer > a {
     float: left;
 }
 
-aside {
-    text-align: right;
+math {
+    font-size: larger;
+}
+
+span + math {
+    margin-left: 0.25ex;
+}
+
+hr {
+    border-top-width: 4px;
 }
 
 input:invalid {
@@ -53,9 +65,14 @@ dialog .title {
     font-size: larger;
 }
 
-/*
 #roll-dice img {
     height: auto;
-    width: calc(100vw / 5);
+    max-width: 400px;
+    width: calc(100vw / 1.5);
 }
-*/
+
+@media (max-width: 991px) {
+    #roll-dice .grid > div:first-child {
+        margin-bottom: 1em !important;
+    }
+}
