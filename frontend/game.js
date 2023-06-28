@@ -4,47 +4,20 @@ import {display} from './modal.js';
 if (!('token' in sessionStorage))
     location.pathname = '/login.html';
 
-const result = document.getElementById('roll-result');
+const rollResult = document.getElementById('roll-result');
 const clientImg = document.getElementById('client-roll-img');
 const serverImg = document.getElementById('server-roll-img');
 
-function printResults() {
+const clientSentHr = document.getElementById('client-sent-hr');
+const clientChosenR = document.getElementById('client-chosen-r');
+const clientReceivedR = document.getElementById('client-received-r');
 
-    //Client Result
-    var clientChooseX = document.getElementById('client-choose-x');
-    clientChooseX.textContent = localStorage.getItem("clientToClientUnhashed");
-    var clientChooseHx = document.getElementById('client-choose-hx');
-    clientChooseHx.textContent = localStorage.getItem("clientToClientHash");
-    var clientGiveX = document.getElementById('client-given-x');
-    clientGiveX.textContent = localStorage.getItem("serverToClientUnhashed");
-    var clientGiveHx = document.getElementById('client-given-hx');
-    clientGiveHx.textContent = localStorage.getItem("serverToClientHash");
+const serverSentHr = document.getElementById('server-sent-hr');
+const serverChosenR = document.getElementById('server-chosen-r');
+const serverReceivedR = document.getElementById('server-received-r');
 
-
-    var clientResult = ((parseInt(localStorage.getItem("clientToClientUnhashed")) ^ parseInt(localStorage.getItem("serverToClientUnhashed"))) % 6) + 1;
-    var clientDiceResult = document.getElementById('client-dice-result');
-    clientDiceResult.textContent = clientResult;
-
-
-    //Server Result
-    var serverChooseX = document.getElementById('server-choose-x');
-    serverChooseX.textContent = localStorage.getItem("serverToServerUnhashed");
-    var serverChooseHx = document.getElementById('server-choose-hx');
-    serverChooseHx.textContent = localStorage.getItem("serverToServerHash");
-    var serverGiveX = document.getElementById('server-given-x');
-    serverGiveX.textContent = localStorage.getItem("clientToServerUnhashed");
-    var serverGiveHx = document.getElementById('server-given-hx');
-    serverGiveHx.textContent = localStorage.getItem("clientToServerHash");
-
-    const serverToServerUnhash = localStorage.getItem("serverToServerUnhashed");
-
-    const clientToServerUnhashed = localStorage.getItem("clientToServerUnhashed");
-
-    const serverResult = (((serverToServerUnhash ^ clientToServerUnhashed) % 6) + 1);
-
-    const serverDiceResult = document.getElementById('server-dice-result');
-    serverDiceResult.textContent = serverResult;
-}
+const clientResult = document.getElementById('client-result');
+const serverResult = document.getElementById('server-result');
 
 /**
  * Compares two integers.
@@ -82,7 +55,7 @@ function showErrors(data) {
 document.getElementById('roll-button').addEventListener('click', async (evt) => {
     // Start the dice roll
     evt.target.setAttribute('aria-busy', true);
-    result.textContent = 'Rolling\u2026';
+    rollResult.textContent = 'Rolling\u2026';
     const rollAnimation = setInterval(() => {
         const rand = () => (Math.round(Math.random() * 5) + 1);
         clientImg.src = `/dice_images/dice-${rand()}.png`;
@@ -91,7 +64,7 @@ document.getElementById('roll-button').addEventListener('click', async (evt) => 
 
     // Generate two random 64-bit integers and hash them with SHA3-256
     const [rand1, rand2] = crypto.getRandomValues(new BigUint64Array(2));
-    const hash = await hashwasm.sha3(rand1.toString() + rand2.toString(), 256);
+    const clientHash = await hashwasm.sha3(rand1.toString() + rand2.toString(), 256);
 
     // Send the hash to the server (commit)
     const base = 'https://backend.localhost/api/game'
@@ -99,12 +72,13 @@ document.getElementById('roll-button').addEventListener('click', async (evt) => 
         'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
         'Content-Type': 'application/json'
     };
-    let body = JSON.stringify({ client_hash: hash });
+    let body = JSON.stringify({ client_hash: clientHash });
     let res = await fetch(`${base}/commit/`, { method: 'POST', headers: headers, body: body });
     // FIXME: can't read the response body for some reason
     if (res.status === 401) {
+        clearInterval(rollAnimation);
         evt.target.setAttribute('aria-busy', false);
-        result.textContent = 'An error occurred';
+        rollResult.textContent = 'An error occurred';
         display('Unauthorized. Please login or register.');
         return;
     }
@@ -112,8 +86,9 @@ document.getElementById('roll-button').addEventListener('click', async (evt) => 
 
     // Display an error if it failed
     if (!res.ok) {
+        clearInterval(rollAnimation);
         evt.target.setAttribute('aria-busy', false);
-        result.textContent = 'An error occurred!';
+        rollResult.textContent = 'An error occurred!';
         showErrors(data);
         return;
     }
@@ -130,8 +105,9 @@ document.getElementById('roll-button').addEventListener('click', async (evt) => 
     data = await res.json();
     // Display an error if it failed
     if (!res.ok) {
+        clearInterval(rollAnimation);
         evt.target.setAttribute('aria-busy', false);
-        result.textContent = 'An error occurred!';
+        rollResult.textContent = 'An error occurred!';
         showErrors(data);
         return;
     }
@@ -149,8 +125,20 @@ document.getElementById('roll-button').addEventListener('click', async (evt) => 
     setTimeout(() => {
         evt.target.setAttribute('aria-busy', false);
         clearInterval(rollAnimation);
+
+        // Display the result
         clientImg.src = `/dice_images/dice-${clientRoll}.png`;
         serverImg.src = `/dice_images/dice-${serverRoll}.png`;
-        result.textContent = output[cmp(clientRoll, serverRoll)];
+        rollResult.textContent = output[cmp(clientRoll, serverRoll)];
+
+        // Display the details
+        clientChosenR.textContent = rand1;
+        clientReceivedR.textContent = data.server_integers.client;
+        serverChosenR.textContent = data.server_integers.server;
+        serverReceivedR.textContent = rand2;
+        clientSentHr.textContent = clientHash;
+        serverSentHr.textContent = serverHash;
+        clientResult.textContent = clientRoll;
+        serverResult.textContent = serverRoll;
     }, 1000);
 });
