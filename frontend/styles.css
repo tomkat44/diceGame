@@ -11,6 +11,10 @@ footer > a {
     float: left;
 }
 
+aside {
+    text-align: right;
+}
+
 input:invalid {
     border-color: darkred;
 }
