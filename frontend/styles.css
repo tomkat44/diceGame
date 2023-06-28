@@ -9,7 +9,7 @@ footer > a {
 }
 
 input:invalid {
-    border-color: maroon;
+    border-color: darkred;
 }
 
 span[data-tooltip] {
@@ -18,12 +18,12 @@ span[data-tooltip] {
 
 progress.very-weak::-webkit-progress-bar,
 progress.very-weak::-moz-progress-bar {
-    background-color: darkred;
+    background-color: maroon;
 }
 
 progress.weak::-webkit-progress-bar,
 progress.weak::-moz-progress-bar {
-    background-color: red;
+    background-color: darkred;
 }
 
 progress.moderate::-webkit-progress-bar,
@@ -41,6 +41,12 @@ progress.very-strong::-moz-progress-bar {
     background-color: green;
 }
 
+dialog .title {
+    color: darkred;
+    font-size: larger;
+}
+
 .center {
     text-align: center;
 }
+

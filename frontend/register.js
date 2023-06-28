@@ -1,7 +1,9 @@
+import { display } from './modal.js';
+
 const form = document.forms.register;
 
-const too_short_err = 'The password is too short!';
-const mismatch_err = 'The passwords do not match!';
+const errTooShort = 'The password is too short!';
+const errMismatch = 'The passwords do not match!';
 
 form.elements.password.addEventListener('keyup', (evt) => {
     const bar = document.getElementById('progress');
@@ -18,13 +20,13 @@ form.elements.password.addEventListener('keyup', (evt) => {
     if (pwd.length < 8) {
         bar.value = 20; // pwd.length;
         bar.classList = 'very-weak';
-        bar.parentElement.dataset.tooltip = too_short_err;
+        bar.parentElement.dataset.tooltip = errTooShort;
         return;
     }
 
     // Check progress
     const prog = [/[$@$!%*#?&]/, /[A-Z]/, /[0-9]/, /[a-z]/]
-    .reduce((memo, group) => memo + group.test(pwd) * 20, 20);
+        .reduce((memo, group) => memo + group.test(pwd) * 20, 20);
     const strength = {
         20: 'very weak',
         40: 'weak',
@@ -42,25 +44,25 @@ form.addEventListener('input', (evt) => {
     // Reset validity on input
     evt.target.setCustomValidity('');
     if (evt.target.name == 'password')
-    form.elements.repeat_password.setCustomValidity('');
+        form.elements.repeat_password.setCustomValidity('');
     if (evt.target.name == 'repeat_password')
-    form.elements.password.setCustomValidity('');
+        form.elements.password.setCustomValidity('');
 });
 
 form.addEventListener('submit', async (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
 
-    const {password, repeat_password} = form.elements;
+    const { password, repeat_password } = form.elements;
     if (password.value.length < 8) {
         // Password is too short
-        password.setCustomValidity(too_short_err);
-        repeat_password.setCustomValidity(too_short_err);
+        password.setCustomValidity(errTooShort);
+        repeat_password.setCustomValidity(errTooShort);
         form.reportValidity();
     } else if (password.value != repeat_password.value) {
         // Passwords don't match
-        password.setCustomValidity(mismatch_err);
-        repeat_password.setCustomValidity(mismatch_err);
+        password.setCustomValidity(errMismatch);
+        repeat_password.setCustomValidity(errMismatch);
         form.reportValidity();
     } else {
         // Submit AJAX request
@@ -78,12 +80,12 @@ form.addEventListener('submit', async (evt) => {
         // Report errors if not OK
         const err = await res.json();
         if ('detail' in err) {
-            alert(err.detail);
+            display(err.detail);
         } else {
             for (key in err) {
                 form.elements[key].setCustomValidity(err[key]);
                 if (key == 'password')
-                repeat_password.setCustomValidity(err[key]);
+                    repeat_password.setCustomValidity(err[key]);
             }
             form.reportValidity();
         }

@@ -1,80 +1,44 @@
-<!doctype html >
-<html lang="en" data-theme="dark">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <link rel="stylesheet" href="css/pico.min.css">
-    <script type="text/javascript" src="login.js"></script>
-  </head>
-  <body>
-    
-    <main class="container">
-      <nav>
-        <ul>
-          <h3>Login</h3>
-        </ul>
-        <ul>
-          <hgroup>
-            <h1>Dice Game!</h1>
-            <h3>Play with safe and fairness</h3>
-          </hgroup>
-        </ul>
-        <ul>
-          
-        </ul>
-      </nav>
-        
-        <form id="login-form" method="POST">
-            
-            <!-- Grid -->
-            <div class="grid">
-          
-              <form>
-            <!-- Markup example 1: input is inside label -->
-              <label for="username">
-                Username
-                <input type="text" id="username" name="username" placeholder="Username" required>
-              </label>
-              </div>
-
-              <div class="grid">
-                <label for="password">
-                    Password
-                    <input type="password" id="password" name="password" placeholder="Password" required>
-                  </label>
-              </div>
-          
-            <!-- Button -->
-            <button type="button" id="loginButton" onclick="loginCredentials()">Login</button>
-            <button type="submit" id="submitButton" style="display: none;">Login</button>
-          </form>
-            <button type="submit" onclick="location.href='./play-dice.html'">Login2</button>
-    
-          </form>
-
-          <nav>
-            <ul>
-              <button type="submit" onclick="location.href='./register.html'" class="secondary">Register</button>
-            </ul>   
-          </nav>
-
-
-
-
-    <footer>
-      <nav>
-        <ul>
-          </ul>
-          <ul>
-            <cite>Copyright &#169 2023</cite>
-            </ul>
-            </nav>
-
-        
-      </footer>
-
-    </main>
-    
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/vendor/pico/pico.min.css" type="text/css">
+        <link rel="stylesheet" href="/styles.css" type="text/css">
+        <script type="module" src="/login.js" defer></script>
+        <title>Digi-Dice</title>
+    </head>
+    <body>
+        <main class="container center">
+            <hgroup>
+                <h1>Digi-Dice</h1>
+                <h3>Login</h3>
+                <hr/>
+            </hgroup>
+            <form id="login" method="post" name="login"
+                  action="https://backend.localhost/api/token/">
+                <label>Username
+                    <input name="username" placeholder="Username"
+                           pattern="[\p{L}0-9@._-]+" required>
+                </label>
+                    <label>Password
+                        <input type="password" name="password" placeholder="Password" required>
+                    </label>
+                <button type="submit">Login</button>
+            </form>
+            <footer>
+                <a href="/register.html" class="secondary" role="button">Register</a>
+                <em>AUEB MSCIS 2023</em>
+            </footer>
+            <dialog>
+                <article>
+                    <header>
+                        <a href="#" aria-label="Close" class="close"></a>
+                        <b class="title">Error</b>
+                    </header>
+                    <p class="body"></p>
+                </article>
+            </dialog>
+        </main>
+    </body>
 </html>
