@@ -1,63 +1,91 @@
+const form = document.forms.register;
 
-function loginCredentials(){
+const too_short_err = 'The password is too short!';
+const mismatch_err = 'The passwords do not match!';
 
-    var username = document.getElementById("username");
-    var password = document.getElementById("password");
-    alert(password);
-    let res = fetch('http://localhost:8000/accounts/login/', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({'username':username, 'password':password})});
-    document.getElementById('submitButton').click();
-}
+form.elements.password.addEventListener('keyup', (evt) => {
+    const bar = document.getElementById('progress');
+    const pwd = evt.target.value;
+    // Reset if password length is zero
+    if (pwd.length === 0) {
+        bar.value = 0;
+        bar.classList = '';
+        delete bar.parentElement.dataset.tooltip;
+        return;
+    }
 
+    // Length must be at least 8 chars
+    if (pwd.length < 8) {
+        bar.value = 20; // pwd.length;
+        bar.classList = 'very-weak';
+        bar.parentElement.dataset.tooltip = too_short_err;
+        return;
+    }
 
+    // Check progress
+    const prog = [/[$@$!%*#?&]/, /[A-Z]/, /[0-9]/, /[a-z]/]
+    .reduce((memo, group) => memo + group.test(pwd) * 20, 20);
+    const strength = {
+        20: 'very weak',
+        40: 'weak',
+        60: 'moderate',
+        80: 'strong',
+        100: 'very strong'
+    };
 
-function isGood(password) {
-    var password = document.getElementById("password1");
-    //password.addEventListener('keyup', function() {
+    bar.value = prog;
+    bar.classList = strength[prog].replace(' ', '-');
+    bar.parentElement.dataset.tooltip = 'Password strength: ' + strength[prog];
+});
 
-  var pwd = password.value
+form.addEventListener('input', (evt) => {
+    // Reset validity on input
+    evt.target.setCustomValidity('');
+    if (evt.target.name == 'password')
+    form.elements.repeat_password.setCustomValidity('');
+    if (evt.target.name == 'repeat_password')
+    form.elements.password.setCustomValidity('');
+});
 
-  // Reset if password length is zero
-  if (pwd.length === 0) {
-    document.getElementById("progresslabel").innerHTML = "";
-    document.getElementById("progress").value = "0";
-    return;
-  }
+form.addEventListener('submit', async (evt) => {
+    evt.preventDefault();
+    evt.stopPropagation();
 
-  // Check progress
-  var prog = [/[$@$!%*#?&]/, /[A-Z]/, /[0-9]/, /[a-z]/]
-    .reduce((memo, test) => memo + test.test(pwd), 0);
+    const {password, repeat_password} = form.elements;
+    if (password.value.length < 8) {
+        // Password is too short
+        password.setCustomValidity(too_short_err);
+        repeat_password.setCustomValidity(too_short_err);
+        form.reportValidity();
+    } else if (password.value != repeat_password.value) {
+        // Passwords don't match
+        password.setCustomValidity(mismatch_err);
+        repeat_password.setCustomValidity(mismatch_err);
+        form.reportValidity();
+    } else {
+        // Submit AJAX request
+        const body = new URLSearchParams(new FormData(form));
+        const res = await fetch(form.action, {
+            method: 'POST',
+            body: body,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        // Redirect to login page if OK
+        if (res.ok) location.href = '/login.html';
 
-  // Length must be at least 8 chars
-  if(prog > 2 && pwd.length > 7){
-    prog++;
-  }
-
-  // Display it
-  var progress = "";
-  var strength = "";
-  switch (prog) {
-    case 0:
-    case 1:
-    case 2:
-      strength = "25%";
-      progress = "25";
-      break;
-    case 3:
-      strength = "50%";
-      progress = "50";
-      break;
-    case 4:
-      strength = "75%";
-      progress = "75";
-      break;
-    case 5:
-      strength = "100% - Password strength is good";
-      progress = "100";
-      break;
-  }
-  document.getElementById("progresslabel").innerHTML = strength;
-  document.getElementById("progress").value = progress;
-
-//});
-
-  }
+        // Report errors if not OK
+        const err = await res.json();
+        if ('detail' in err) {
+            alert(err.detail);
+        } else {
+            for (key in err) {
+                form.elements[key].setCustomValidity(err[key]);
+                if (key == 'password')
+                repeat_password.setCustomValidity(err[key]);
+            }
+            form.reportValidity();
+        }
+    }
+});

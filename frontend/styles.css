@@ -1,11 +1,46 @@
-body {
-    text-align: center;
-  }
-
-image{
-    text-align: center;
+footer > em {
+    float: right;
+    font-size: smaller;
+    vertical-align: bottom;
 }
 
-.progress-bar {
-  border-radius: 5px;
+footer > a {
+    float: left;
+}
+
+input:invalid {
+    border-color: maroon;
+}
+
+span[data-tooltip] {
+    border-bottom: none;
+}
+
+progress.very-weak::-webkit-progress-bar,
+progress.very-weak::-moz-progress-bar {
+    background-color: darkred;
+}
+
+progress.weak::-webkit-progress-bar,
+progress.weak::-moz-progress-bar {
+    background-color: red;
+}
+
+progress.moderate::-webkit-progress-bar,
+progress.moderate::-moz-progress-bar {
+    background-color: orange;
+}
+
+progress.strong::-webkit-progress-bar,
+progress.strong::-moz-progress-bar {
+    background-color: lightgreen;
+}
+
+progress.very-strong::-webkit-progress-bar,
+progress.very-strong::-moz-progress-bar {
+    background-color: green;
+}
+
+.center {
+    text-align: center;
 }

@@ -1,103 +1,55 @@
-<!doctype html >
-<html lang="en" data-theme="dark">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <link rel="stylesheet" href="css/pico.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
-<script src="../js/password-strength.js"></script>
-    <script type="text/javascript" src="register.js"></script>
-  </head>
-  <body>
-    
-    <main class="container">
-
-        <nav>
-          <ul>
-            <h3>Registration</h3>
-          </ul>
-          <ul>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/vendor/pico/pico.min.css" type="text/css">
+        <link rel="stylesheet" href="/styles.css" type="text/css">
+        <script type="text/javascript" src="/register.js" defer></script>
+        <title>Digi-Dice</title>
+    </head>
+    <body>
+        <main class="container center">
             <hgroup>
-              <h1>Dice Game!</h1>
-              <h3>Play with safe and fairness</h3>
+                <h1>Digi-Dice</h1>
+                <h3>Registration</h3>
+                <hr/>
             </hgroup>
-          </ul>
-          <ul>
-            <li><a href="./login.html" class="secondary">Login</a></li>
-          </ul>
-        </nav>
-        
-        <form id="login-form" method="POST">
-            
-            
-          
-              <form>
-                <!-- Grid -->
-            <div class="grid">
-            <!-- Markup example 1: input is inside label -->
-              <label for="username">
-                Username
-                <input type="text" id="username" name="username" placeholder="Username" required>
-              </label>
-              </div>
-              
-              <div class="grid">
-                <!-- Markup example 1: input is inside label -->
-                  <label for="firstname">
-                    First name
-                    <input type="text" id="firstname" name="firstname" placeholder="First Name" required>
-                  </label>
-                  </div>
-                  <div class="grid">
-                    <!-- Markup example 1: input is inside label -->
-                      <label for="lastname">
-                        Last name
-                        <input type="text" id="lastname" name="lastname" placeholder="Last Name" required>
-                      </label>
-                      </div>
-                      <div class="grid">
-                        <!-- Markup example 1: input is inside label -->
-                          <label for="email">
-                            e-mail
-                            <input type="text" id="email" name="email" placeholder="e-mail">
-                          </label>
-                          </div>
-
-              <div class="grid">
-                <label for="password1">
-                    Password
-                    <input type="password1" id="password1" name="password1" placeholder="Password" class="form-control" onkeyup="isGood(this.value)" required>
-                    <progress id="progress" value="0" max="100">70</progress>
-                    <span id="progresslabel"></span>
-                  </label>
-                  
-              </div>
-              <div class="grid">
-                <label for="password2">
-                    Repeat Password
-                    <input type="password2" id="password2" name="password2" placeholder="Repeat Password" required>
-                  </label>
-              </div>
-          
-            <!-- Button -->
-            <button type="button" id="loginButton" onclick="location.href='./login.html'">Submit</button>
-            <button type="submit" id="submitButton" style="display: none;">Login</button>
-          </form>
-            
-    
-          </form>
-          <footer>
-            <nav>
-              <ul> 
-              </ul>  
-             <ul>
-              <cite>Copyright &#169 2023</cite>
-              </ul>
-            </nav>  
+            <form id="register" method="post" name="register"
+                  action="https://backend.localhost/api/register/">
+                <label>Username
+                    <input name="username" placeholder="Username"
+                           pattern="[\p{L}0-9@._-]+" required>
+                </label>
+                <div class="grid">
+                    <label>First name
+                        <input name="first_name" placeholder="First Name" required>
+                    </label>
+                    <label>Last name
+                        <input name="last_name" placeholder="Last Name" required>
+                    </label>
+                </div>
+                <label>Email
+                    <input name="email" placeholder="Email">
+                </label>
+                <div class="grid">
+                    <label>Password
+                        <input type="password" name="password" placeholder="Password" required>
+                    </label>
+                    <label>Repeat Password
+                        <input type="password" id="repeat_password"
+                               placeholder="Repeat Password" required>
+                    </label>
+                </div>
+                <span data-placement="top">
+                    <progress id="progress" value="0" max="100"></progress>
+                </span>
+                <button type="submit">Register</button>
+            </form>
+            <footer>
+                <a href="/login.html" class="secondary" role="button">Login</a>
+                <em>AUEB MSCIS 2023</em>
             </footer>
-
-    </main>
-    
-  </body>
+        </main>
+    </body>
 </html>

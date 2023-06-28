@@ -27,7 +27,7 @@ class CorsMiddleware:
         response = self.get_response(request)
         if not request.path.startswith('/api'):
             return response
-        patch_vary_headers(response, ['Origin'])
+        patch_vary_headers(response, ('Origin',))
         response.headers['Access-Control-Allow-Origin'] = ', '.join(self.allowed_origins)
         response.headers['Access-Control-Allow-Methods'] = ', '.join(self.allowed_methods)
         response.headers['Access-Control-Allow-Headers'] = ', '.join(self.allowed_headers)
