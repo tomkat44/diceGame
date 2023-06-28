@@ -131,11 +131,11 @@ function printResults(){
     serverGiveHx.textContent = localStorage.getItem("clientToServerHash");
     
     const serverToServerUnhash = localStorage.getItem("serverToServerUnhashed");
-    alert(serverToServerUnhash);
+    
     const clientToServerUnhashed = localStorage.getItem("clientToServerUnhashed");
-    alert(clientToServerUnhashed);
+    
     const serverResult = (((serverToServerUnhash ^ clientToServerUnhashed) % 6)+1);
-    alert(typeof serverResult);
+    
     const serverDiceResult = document.getElementById('server-dice-result');
     serverDiceResult.textContent = serverResult;
 }
