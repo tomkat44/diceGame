@@ -17,6 +17,7 @@ dependencies = [
     "django[argon2]~=4.2",
     "djangorestframework~=3.14",
     "djangorestframework-simplejwt[crypto]~=5.2",
+    "django-zxcvbn-password-validator~=1.4",
     "mysqlclient~=2.1"
 ]
 

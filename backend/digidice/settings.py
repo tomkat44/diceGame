@@ -47,8 +47,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_zxcvbn_password_validator',
     'rest_framework',
     'users',
+    'game'
 ]
 if DEBUG and find_spec('django_extensions'):
     INSTALLED_APPS.append('django_extensions')
@@ -130,10 +132,14 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
 
+#: The minimal acceptable password strength for zxcvbn.
+DEFAULT_MINIMAL_STRENGTH = 3
+
 #: A list of validators that are used to check the strength of passwords.
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django_zxcvbn_password_validator.ZxcvbnPasswordValidator'},
     {'NAME': 'users.validators.MinimumEntropyValidator'},
 ]
 

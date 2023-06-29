@@ -5,6 +5,8 @@ const form = document.forms.register;
 const errTooShort = 'The password is too short!';
 const errMismatch = 'The passwords do not match!';
 
+zxcvbnts.core.zxcvbnOptions.setOptions({ maxLength: 128 });
+
 form.elements.password.addEventListener('keyup', (evt) => {
     const bar = document.getElementById('progress');
     const pwd = evt.target.value;
@@ -24,21 +26,20 @@ form.elements.password.addEventListener('keyup', (evt) => {
         return;
     }
 
-    // Check progress
-    const prog = [/[$@$!%*#?&]/, /[A-Z]/, /[0-9]/, /[a-z]/]
-        .reduce((memo, group) => memo + group.test(pwd) * 20, 20);
+    // Check password strength
+    const inputs = Array.from(document.querySelectorAll('.user-input'), e => e.value);
+    const score = zxcvbnts.core.zxcvbn(pwd, inputs).score;
     const strength = {
-        20: 'very weak',
-        40: 'weak',
-        60: 'moderate',
-        80: 'strong',
-        100: 'very strong'
+        0: 'very weak',
+        1: 'weak',
+        2: 'moderate',
+        3: 'strong',
+        4: 'very strong'
     };
-
-    bar.value = prog;
-    bar.classList.value = strength[prog].replace(' ', '-');
-    bar.parentElement.dataset.tooltip = 'Password strength: ' + strength[prog];
-}, {passive: true});
+    bar.value = score * 20 + 20;
+    bar.classList.value = strength[score].replace(' ', '-');
+    bar.parentElement.dataset.tooltip = 'Password strength: ' + strength[score];
+});
 
 form.addEventListener('input', (evt) => {
     // Reset validity on input
@@ -47,7 +48,7 @@ form.addEventListener('input', (evt) => {
         form.elements.repeat_password.setCustomValidity('');
     if (evt.target.name == 'repeat_password')
         form.elements.password.setCustomValidity('');
-}, {passive: true});
+});
 
 form.addEventListener('submit', async (evt) => {
     evt.preventDefault();
@@ -82,7 +83,7 @@ form.addEventListener('submit', async (evt) => {
         if ('detail' in err) {
             display(err.detail);
         } else {
-            for (key in err) {
+            for (const key in err) {
                 form.elements[key].setCustomValidity(err[key]);
                 if (key == 'password')
                     repeat_password.setCustomValidity(err[key]);

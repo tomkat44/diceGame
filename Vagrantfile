@@ -29,7 +29,7 @@ Vagrant.configure('2') do |config|
         # install dependencies
         export DEBIAN_FRONTEND=noninteractive
         apt-get update
-        apt-get install -yq lxde-core lxdm chromium libnss3-tools
+        apt-get install -yq lxde-core lxdm fonts-noto-core chromium libnss3-tools
         apt-get install -yq apache2 python3{,-pip,-venv} mariadb-server libmariadb-dev
 
         # set up database

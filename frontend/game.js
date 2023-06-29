@@ -63,7 +63,12 @@ function showErrors(data) {
             const div = document.createElement('div');
             const b = document.createElement('b');
             b.textContent = key + ':';
-            div.append(b, ' ' + val);
+            if (Array.isArray(val)) {
+                console.error({[key]: val});
+                div.append(b, ' ' + val[0]);
+            } else {
+                div.append(b, ' ' + val);
+            }
             nodes.push(div);
         }
         display(nodes);
@@ -106,7 +111,7 @@ rollButton.addEventListener('click', async () => {
     // FIXME: can't read the response body for some reason
     if (res.status === 401) {
         clearInterval(rollAnimation);
-        showErrors({ details: 'Unauthorized. Please login or register.' });
+        showErrors({ detail: 'Unauthorized. Please login or register.' });
         delete sessionStorage.token;
         return;
     }
