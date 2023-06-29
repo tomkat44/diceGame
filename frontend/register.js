@@ -38,7 +38,7 @@ form.elements.password.addEventListener('keyup', (evt) => {
     bar.value = prog;
     bar.classList = strength[prog].replace(' ', '-');
     bar.parentElement.dataset.tooltip = 'Password strength: ' + strength[prog];
-});
+}, {passive: true});
 
 form.addEventListener('input', (evt) => {
     // Reset validity on input
@@ -47,7 +47,7 @@ form.addEventListener('input', (evt) => {
         form.elements.repeat_password.setCustomValidity('');
     if (evt.target.name == 'repeat_password')
         form.elements.password.setCustomValidity('');
-});
+}, {passive: true});
 
 form.addEventListener('submit', async (evt) => {
     evt.preventDefault();

@@ -186,7 +186,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_THROTTLE_RATES': {
         'anon': '2/s',
-        'user': '5/s'
+        'user': '20/s'
     },
     'URL_FORMAT_OVERRIDE': None
 }

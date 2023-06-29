@@ -3,7 +3,8 @@ main {
 }
 
 aside {
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
 }
 
 footer > em {
@@ -15,16 +16,25 @@ footer > a {
     float: left;
 }
 
+figure figcaption {
+    color: var(--color);
+    font-weight: bolder;
+}
+
+table th[scope=row] {
+    width: 25%;
+}
+
+table + hr {
+    border-top-width: 4px;
+}
+
 math {
     font-size: larger;
 }
 
 span + math {
     margin-left: 0.25ex;
-}
-
-hr {
-    border-top-width: 4px;
 }
 
 input:invalid {
@@ -65,14 +75,23 @@ dialog .title {
     font-size: larger;
 }
 
+.hide {
+    visibility: hidden;
+}
+
+#switch-theme {
+    width: max-content;
+    border-radius: 50%;
+    font-size: larger;
+    padding: 0.1rem 0.45rem;
+}
+
 #roll-dice img {
     height: auto;
     max-width: 400px;
     width: calc(100vw / 1.5);
 }
 
-@media (max-width: 991px) {
-    #roll-dice .grid > div:first-child {
-        margin-bottom: 1em !important;
-    }
+:root[data-theme=light] #roll-dice img {
+    filter: invert(90%);
 }

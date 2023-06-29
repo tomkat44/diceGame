@@ -5,7 +5,7 @@ const form = document.forms.login;
 form.addEventListener('input', (evt) => {
     // Reset validity on input
     evt.target.setCustomValidity('');
-});
+}, {passive: true});
 
 form.addEventListener('submit', async (evt) => {
     evt.preventDefault();

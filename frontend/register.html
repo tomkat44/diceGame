@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="author" content="Thomas Katsantas, Ioannis Somos">
         <link rel="stylesheet" href="vendor/pico/pico.min.css" type="text/css">
         <link rel="stylesheet" href="styles.css" type="text/css">
+        <script type="application/javascript" src="theme.js" async></script>
         <script type="module" src="register.js" defer></script>
         <title>Digi-Dice</title>
     </head>
     <body>
         <main class="container">
+            <aside>
+                <button id="switch-theme" aria-label="Switch theme"
+                        class="contrast" tabindex="-1">&#x1f323;</button>
+            </aside>
             <hgroup>
                 <h1>Digi-Dice</h1>
                 <h3>Registration</h3>
@@ -54,7 +59,7 @@
             <dialog id="modal">
                 <article>
                     <header>
-                        <a href="#" aria-label="Close" class="close"></a>
+                        <a href="#" aria-label="Close" class="close" tabindex="-1"></a>
                         <b class="title">Error</b>
                     </header>
                     <p class="body"></p>

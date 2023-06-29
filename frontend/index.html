@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,12 +8,15 @@
         <link rel="stylesheet" href="styles.css" type="text/css">
         <script src="vendor/hash-wasm/sha3.umd.min.js"
                 type="application/javascript" async></script>
+        <script type="application/javascript" src="theme.js" async></script>
         <script type="module" src="game.js" defer></script>
         <title>Digi-Dice</title>
     </head>
     <body>
         <main class="container">
             <aside>
+                <button id="switch-theme" aria-label="Switch theme"
+                        class="contrast" tabindex="-1">&#x1f323;</button>
                 <a href="login.html" id="logout" class="secondary">Logout</a>
             </aside>
             <hgroup>
@@ -23,47 +26,47 @@
             </hgroup>
             <article id="roll-dice">
                 <h4 id="roll-result">Ready to roll</h4>
-                <section>
-                <div class="grid">
-                    <div>
-                        <div><b>You rolled</b></div><br/>
+                <section class="grid">
+                    <figure>
+                        <figcaption class="hide">You rolled</figcaption>
                         <img id="client-roll-img" alt="Dice" src="dice_images/dice-0.png">
-                    </div>
-                    <div>
-                        <div><b>The server rolled</b></div><br/>
+                    </figure>
+                    <figure>
+                        <figcaption class="hide">The server rolled</figcaption>
                         <img id="server-roll-img" alt="Dice" src="dice_images/dice-0.png">
-                    </div>
-                </div>
+                    </figure>
                 </section>
                 <button type="button" id="roll-button">ROLL</button>
             </article>
             <details>
-                <summary class="secondary">Details</summary>
+                <summary class="secondary" tabindex="0">Details</summary>
                 <table>
                     <thead>
                         <tr>
                             <th scope="col"></th>
-                            <th scope="col"><ins><b>Client Roll</b></ins></th>
+                            <th scope="col"><strong>Client Roll</strong></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <th scope="row">
                                 <span>Sent</span>
-                                <math><mrow>h(<msub><mi>r</mi><mi>c</mi></msub>)</mrow></math>
+                                <math>
+                                    <mrow>
+                                        h(<msub><mi>r</mi><mi>c</mi></msub>
+                                        <mo>||</mo>
+                                        <msub><mi>r</mi><mi>s</mi></msub>)
+                                    </mrow>
+                                </math>
                             </th>
-                            <td>
-                                <div id="client-sent-hr"></div>
-                            </td>
+                            <td><ins id="client-sent-hr"></ins></td>
                         </tr>
                         <tr>
                             <th scope="row">
                                 <span>Chose</span>
                                 <math><mrow><msub><mi>r</mi><mi>c</mi></msub></mrow></math>
                             </th>
-                            <td>
-                                <div id="client-chosen-r"></div>
-                            </td>
+                            <td><ins id="client-chosen-r"></ins></td>
                         </tr>
                         <tr>
                             <th scope="row"></th>
@@ -74,9 +77,7 @@
                                 <span>Received</span>
                                 <math><mrow><msub><mi>r</mi><mi>c</mi></msub></mrow></math>
                             </th>
-                            <td>
-                                <div id="client-received-r"></div>
-                            </td>
+                            <td><ins id="client-received-r"></ins></td>
                         </tr>
 
                         <tr>
@@ -86,10 +87,8 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th scope="col"><b>RESULT</b></th>
-                            <td scope="col">
-                                <div id="client-result"></div>
-                            </td>
+                            <th scope="col"><strong>RESULT</strong></th>
+                            <td><ins id="client-result"></ins></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -98,27 +97,29 @@
                     <thead>
                         <tr>
                             <th scope="col"></th>
-                            <th scope="col"><ins><b>Server Roll</b></ins></th>
+                            <th scope="col"><strong>Server Roll</strong></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <th scope="row">
                                 <span>Sent</span>
-                                <math><mrow>h(<msub><mi>r</mi><mi>s</mi></msub>)</mrow></math>
+                                <math>
+                                    <mrow>
+                                        h(<msub><mi>r</mi><mi>s</mi></msub>
+                                        <mo>||</mo>
+                                        <msub><mi>r</mi><mi>c</mi></msub>)
+                                    </mrow>
+                                </math>
                             </th>
-                            <td>
-                                <div id="server-sent-hr"></div>
-                            </td>
+                            <td><ins id="server-sent-hr"></ins></td>
                         </tr>
                         <tr>
                             <th scope="row">
                                 <span>Chose</span>
                                 <math><mrow><msub><mi>r</mi><mi>s</mi></msub></mrow></math>
                             </th>
-                            <td>
-                                <div id="server-chosen-r"></div>
-                            </td>
+                            <td><ins id="server-chosen-r"></ins></td>
                         </tr>
 
                         <tr>
@@ -131,7 +132,7 @@
                                 <math><mrow><msub><mi>r</mi><mi>s</mi></msub></mrow></math>
                             </th>
                             <td>
-                                <div id="server-received-r"></div>
+                                <ins id="server-received-r"></ins>
                             </td>
                         </tr>
                         <tr>
@@ -141,10 +142,8 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th scope="col"><b>RESULT</b></th>
-                            <td scope="col">
-                                <div id="server-result"></div>
-                            </td>
+                            <th scope="col"><strong>RESULT</strong></th>
+                            <td><ins id="server-result"></ins></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -156,7 +155,7 @@
             <dialog id="modal">
                 <article>
                     <header>
-                        <a href="#" aria-label="Close" class="close"></a>
+                        <a href="#" aria-label="Close" class="close" tabindex="-1"></a>
                         <b class="title">Error</b>
                     </header>
                     <p class="body"></p>

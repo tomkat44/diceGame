@@ -65,6 +65,8 @@ document.getElementById('logout')
 document.getElementById('roll-button').addEventListener('click', async (evt) => {
     // Start the dice roll
     evt.target.setAttribute('aria-busy', true);
+    clientImg.previousElementSibling.classList.add('hide');
+    serverImg.previousElementSibling.classList.add('hide');
     rollResult.textContent = 'Rolling\u2026';
     const rollAnimation = setInterval(() => {
         const rand = () => (Math.round(Math.random() * 5) + 1);
@@ -90,6 +92,7 @@ document.getElementById('roll-button').addEventListener('click', async (evt) => 
         evt.target.setAttribute('aria-busy', false);
         rollResult.textContent = 'An error occurred';
         display('Unauthorized. Please login or register.');
+        sessionStorage.removeItem('token');
         return;
     }
     let data = await res.json();
@@ -140,6 +143,8 @@ document.getElementById('roll-button').addEventListener('click', async (evt) => 
         clientImg.src = `/dice_images/dice-${clientRoll}.png`;
         serverImg.src = `/dice_images/dice-${serverRoll}.png`;
         rollResult.textContent = output[cmp(clientRoll, serverRoll)];
+        clientImg.previousElementSibling.classList.remove('hide');
+        serverImg.previousElementSibling.classList.remove('hide');
 
         // Display the details
         clientChosenR.textContent = rand1;
