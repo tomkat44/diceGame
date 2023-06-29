@@ -8,7 +8,10 @@ const modal = document.getElementById('modal');
 const toggleClass = () =>
     document.documentElement.classList.toggle('modal-is-open');
 modal.addEventListener('open', toggleClass);
-modal.addEventListener('close', toggleClass);
+modal.addEventListener('close', () => {
+    toggleClass();
+    modal.querySelector('.body').textContent = null;
+});
 
 // Close modal when the X is clicked
 modal.querySelector('.close').addEventListener('click', () => modal.close());

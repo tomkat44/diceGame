@@ -1,10 +1,12 @@
-import {display} from './modal.js';
+import { display } from './modal.js';
 
 // Redirect to the login page if the token doesn't exist
 if (!('token' in sessionStorage))
     location.pathname = '/login.html';
 
+const rollButton = document.getElementById('roll-button');
 const rollResult = document.getElementById('roll-result');
+
 const clientImg = document.getElementById('client-roll-img');
 const serverImg = document.getElementById('server-roll-img');
 
@@ -36,15 +38,24 @@ const cmp = (a, b) => (a > b) - (a < b);
 const compute = (ra, rb) => Number((ra ^ BigInt(rb)) % 6n) + 1;
 
 /**
+ * Contatenates and hashes two numbers with SHA3-256.
+ * @param {string} ra the first number (as a string)
+ * @param {string} rb the second number (as a string)
+ */
+const hash = async (ra, rb) => hashwasm.sha3(ra + rb, 256);
+
+/**
  * Show errors in a modal.
  * @param {any} data the error data
  */
 function showErrors(data) {
+    rollButton.setAttribute('aria-busy', false);
+    rollResult.textContent = 'An error occurred';
     if ('detail' in data) {
         display(data.detail);
     } else if ('messages' in data) {
         const nodes = Array.from(data.messages, (msg) =>
-            Object.assign(document.createElement('div'), {textContent: msg}));
+            Object.assign(document.createElement('div'), { textContent: msg }));
         display(nodes);
     } else {
         const nodes = []
@@ -59,24 +70,25 @@ function showErrors(data) {
     }
 }
 
-document.getElementById('logout')
-  .addEventListener('click', () => sessionStorage.removeItem('token'));
+document.getElementById('logout').addEventListener('click', () => {
+    delete sessionStorage.token;
+});
 
-document.getElementById('roll-button').addEventListener('click', async (evt) => {
+rollButton.addEventListener('click', async () => {
     // Start the dice roll
-    evt.target.setAttribute('aria-busy', true);
+    rollButton.setAttribute('aria-busy', true);
     clientImg.previousElementSibling.classList.add('hide');
     serverImg.previousElementSibling.classList.add('hide');
     rollResult.textContent = 'Rolling\u2026';
     const rollAnimation = setInterval(() => {
-        const rand = () => (Math.round(Math.random() * 5) + 1);
+        const rand = () => Math.round(Math.random() * 5) + 1;
         clientImg.src = `/dice_images/dice-${rand()}.png`;
         serverImg.src = `/dice_images/dice-${rand()}.png`;
     }, 100);
 
     // Generate two random 64-bit integers and hash them with SHA3-256
     const [rand1, rand2] = crypto.getRandomValues(new BigUint64Array(2));
-    const clientHash = await hashwasm.sha3(rand1.toString() + rand2.toString(), 256);
+    const clientHash = await hash(rand1.toString(), rand2.toString());
 
     // Send the hash to the server (commit)
     const base = 'https://backend.localhost/api/game'
@@ -85,14 +97,14 @@ document.getElementById('roll-button').addEventListener('click', async (evt) => 
         'Content-Type': 'application/json'
     };
     let body = JSON.stringify({ client_hash: clientHash });
-    let res = await fetch(`${base}/commit/`, { method: 'POST', headers: headers, body: body });
+    let res = await fetch(`${base}/commit/`, {
+        method: 'POST', headers: headers, body: body
+    });
     // FIXME: can't read the response body for some reason
     if (res.status === 401) {
         clearInterval(rollAnimation);
-        evt.target.setAttribute('aria-busy', false);
-        rollResult.textContent = 'An error occurred';
-        display('Unauthorized. Please login or register.');
-        sessionStorage.removeItem('token');
+        showErrors({ details: 'Unauthorized. Please login or register.' });
+        delete sessionStorage.token;
         return;
     }
     let data = await res.json();
@@ -100,8 +112,6 @@ document.getElementById('roll-button').addEventListener('click', async (evt) => 
     // Display an error if it failed
     if (!res.ok) {
         clearInterval(rollAnimation);
-        evt.target.setAttribute('aria-busy', false);
-        rollResult.textContent = 'An error occurred!';
         showErrors(data);
         return;
     }
@@ -114,42 +124,60 @@ document.getElementById('roll-button').addEventListener('click', async (evt) => 
             server: rand2.toString()
         }
     });
-    res = await fetch(`${base}/reveal/`, { method: 'POST', headers: headers, body: body });
+    res = await fetch(`${base}/reveal/`, {
+        method: 'POST', headers: headers, body: body
+    });
     data = await res.json();
     // Display an error if it failed
     if (!res.ok) {
         clearInterval(rollAnimation);
-        evt.target.setAttribute('aria-busy', false);
-        rollResult.textContent = 'An error occurred!';
         showErrors(data);
+        return;
+    }
+    const { client: clientInt, server: serverInt } = data.server_integers;
+
+    // Verify the server's hash
+    const checkHash = await hash(clientInt, serverInt);
+    if (checkHash != serverHash) {
+        clearInterval(rollAnimation);
+        showErrors({ details: 'The hashes don\'t match!' });
+        console.error(`Computed hash: ${checkHash}`);
         return;
     }
 
     // Compute the dice rolles
-    const clientRoll = compute(rand1, data.server_integers.client);
-    const serverRoll = compute(rand2, data.server_integers.server);
+    const clientRoll = compute(rand1, clientInt);
+    const serverRoll = compute(rand2, serverInt);
 
-    // Display the winner
-    const output = {
-        '-1': 'You LOST!',
-        '1': 'You WON!',
-        '0': 'It\'s a tie!'
-    };
     setTimeout(() => {
-        evt.target.setAttribute('aria-busy', false);
+        rollButton.setAttribute('aria-busy', false);
         clearInterval(rollAnimation);
 
         // Display the result
-        clientImg.src = `/dice_images/dice-${clientRoll}.png`;
-        serverImg.src = `/dice_images/dice-${serverRoll}.png`;
-        rollResult.textContent = output[cmp(clientRoll, serverRoll)];
         clientImg.previousElementSibling.classList.remove('hide');
         serverImg.previousElementSibling.classList.remove('hide');
+        clientImg.src = `/dice_images/dice-${clientRoll}.png`;
+        serverImg.src = `/dice_images/dice-${serverRoll}.png`;
+        const u = document.createElement('u');
+        switch (cmp(clientRoll, serverRoll)) {
+            case -1:
+                u.textContent = 'lost';
+                rollResult.replaceChildren('You ', u, '!');
+                break;
+            case 1:
+                u.textContent = 'won';
+                rollResult.replaceChildren('You ', u, '!');
+                break;
+            case 0:
+                u.textContent = 'tie';
+                rollResult.replaceChildren('It\'s a ', u, '!');
+                break;
+        }
 
         // Display the details
         clientChosenR.textContent = rand1;
-        clientReceivedR.textContent = data.server_integers.client;
-        serverChosenR.textContent = data.server_integers.server;
+        clientReceivedR.textContent = clientInt;
+        serverChosenR.textContent = serverInt;
         serverReceivedR.textContent = rand2;
         clientSentHr.textContent = clientHash;
         serverSentHr.textContent = serverHash;

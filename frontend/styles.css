@@ -52,17 +52,17 @@ progress.very-weak::-moz-progress-bar {
 
 progress.weak::-webkit-progress-bar,
 progress.weak::-moz-progress-bar {
-    background-color: darkred;
+    background-color: firebrick;
 }
 
 progress.moderate::-webkit-progress-bar,
 progress.moderate::-moz-progress-bar {
-    background-color: orange;
+    background-color: darkorange;
 }
 
 progress.strong::-webkit-progress-bar,
 progress.strong::-moz-progress-bar {
-    background-color: lightgreen;
+    background-color: seagreen;
 }
 
 progress.very-strong::-webkit-progress-bar,
@@ -90,6 +90,7 @@ dialog .title {
     height: auto;
     max-width: 400px;
     width: calc(100vw / 1.5);
+    border-radius: 7.5%;
 }
 
 :root[data-theme=light] #roll-dice img {

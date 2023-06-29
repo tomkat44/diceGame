@@ -28,7 +28,7 @@ form.addEventListener('submit', async (evt) => {
         // Manually clear the token when it expires
         setTimeout(() => sessionStorage.removeItem('token'), 3.6e6);
         // Redirect to the game
-        location.href = '/index.html';
+        location.href = 'index.html';
     }
 
     if ('detail' in data) {

@@ -11,7 +11,7 @@ form.elements.password.addEventListener('keyup', (evt) => {
     // Reset if password length is zero
     if (pwd.length === 0) {
         bar.value = 0;
-        bar.classList = '';
+        bar.classList.value = '';
         delete bar.parentElement.dataset.tooltip;
         return;
     }
@@ -19,7 +19,7 @@ form.elements.password.addEventListener('keyup', (evt) => {
     // Length must be at least 8 chars
     if (pwd.length < 8) {
         bar.value = 20; // pwd.length;
-        bar.classList = 'very-weak';
+        bar.classList.value = 'very-weak';
         bar.parentElement.dataset.tooltip = errTooShort;
         return;
     }
@@ -36,7 +36,7 @@ form.elements.password.addEventListener('keyup', (evt) => {
     };
 
     bar.value = prog;
-    bar.classList = strength[prog].replace(' ', '-');
+    bar.classList.value = strength[prog].replace(' ', '-');
     bar.parentElement.dataset.tooltip = 'Password strength: ' + strength[prog];
 }, {passive: true});
 
@@ -75,7 +75,7 @@ form.addEventListener('submit', async (evt) => {
             }
         })
         // Redirect to login page if OK
-        if (res.ok) location.href = '/login.html';
+        if (res.ok) location.href = 'login.html';
 
         // Report errors if not OK
         const err = await res.json();
