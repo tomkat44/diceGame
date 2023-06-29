@@ -76,6 +76,9 @@ document.getElementById('logout').addEventListener('click', () => {
 
 rollButton.addEventListener('click', async () => {
     // Start the dice roll
+    clientResult.title = '';
+    serverResult.title = '';
+    document.querySelectorAll('ins').forEach(e => { e.textContent = null; });
     rollButton.setAttribute('aria-busy', true);
     clientImg.previousElementSibling.classList.add('hide');
     serverImg.previousElementSibling.classList.add('hide');
@@ -141,7 +144,7 @@ rollButton.addEventListener('click', async () => {
     if (checkHash != serverHash) {
         clearInterval(rollAnimation);
         showErrors({ details: 'The hashes don\'t match!' });
-        console.error(`Computed hash: ${checkHash}`);
+        console.warn(`Computed hash: ${checkHash}, received hash ${serverHash}`);
         return;
     }
 
@@ -181,7 +184,9 @@ rollButton.addEventListener('click', async () => {
         serverReceivedR.textContent = rand2;
         clientSentHr.textContent = clientHash;
         serverSentHr.textContent = serverHash;
+        clientResult.title = clientRoll;
         clientResult.textContent = String.fromCharCode(0x267F + clientRoll);
+        serverResult.title = serverRoll;
         serverResult.textContent = String.fromCharCode(0x267F + serverRoll);
     }, 500);
 });

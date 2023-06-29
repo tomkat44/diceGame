@@ -36,7 +36,7 @@ form.addEventListener('submit', async (evt) => {
         display(data.detail);
     } else {
         // Show the error(s) in the form
-        for (key in data) {
+        for (const key in data) {
             form.elements[key].setCustomValidity(data[key]);
             if (key == 'password')
                 repeat_password.setCustomValidity(data[key]);

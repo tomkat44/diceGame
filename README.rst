@@ -3,6 +3,14 @@ System & Network Security Assignment
 
 *These instructions are for Debian/Ubuntu.*
 
+Dependencies
+------------
+
+.. code:: bash
+
+   sudo apt-get update
+   sudo apt-get install -yq apache2 python3{,-pip,-venv} mariadb-server libmariadb-dev
+
 Backend
 -------
 

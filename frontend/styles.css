@@ -18,11 +18,20 @@ footer > a {
 
 figure figcaption {
     color: var(--color);
+    font-size: larger;
     font-weight: bolder;
 }
 
 table th[scope=row] {
     width: 25%;
+}
+
+table > tfoot th {
+    padding: 20px 1rem 1rem;
+}
+
+table > tfoot td {
+    font-size: x-large;
 }
 
 table + hr {
@@ -94,5 +103,5 @@ dialog .title {
 }
 
 :root[data-theme=light] #roll-dice img {
-    filter: invert(90%);
+    filter: invert(0.8);
 }
