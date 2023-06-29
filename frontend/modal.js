@@ -16,10 +16,14 @@ modal.querySelector('.close').addEventListener('click', () => modal.close());
 /**
  * Displays a modal with the given body.
  *
- * @param {string} body the content of the modal
+ * @param {string | Node[]} body the content of the modal
  */
 export function display(body) {
-    modal.querySelector('.body').innerHTML = body;
+    if (typeof body === 'string') {
+        modal.querySelector('.body').append(body);
+    } else {
+        modal.querySelector('.body').append(...body);
+    }
     modal.showModal();
     toggleClass();
 }

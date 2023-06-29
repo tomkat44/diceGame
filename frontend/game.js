@@ -43,13 +43,19 @@ function showErrors(data) {
     if ('detail' in data) {
         display(data.detail);
     } else if ('messages' in data) {
-        // TODO: escape HTML or use `document.createElement`
-        const divs = Array.from(data.messages, (msg) => `<div>${msg}</div>`);
-        display(divs.join('\n'));
+        const nodes = Array.from(data.messages, (msg) =>
+            Object.assign(document.createElement('div'), {textContent: msg}));
+        display(nodes);
     } else {
-        const divs = Object.entries(data)
-            .map(([key, val]) => `<div><b>${key}</b>: ${val}</div>`);
-        display(divs.join('\n'));
+        const nodes = []
+        for (const [key, val] of Object.entries(data)) {
+            const div = document.createElement('div');
+            const b = document.createElement('b');
+            b.textContent = key + ':';
+            div.append(b, ' ' + val);
+            nodes.push(div);
+        }
+        display(nodes);
     }
 }
 
@@ -73,7 +79,7 @@ document.getElementById('roll-button').addEventListener('click', async (evt) => 
     // Send the hash to the server (commit)
     const base = 'https://backend.localhost/api/game'
     const headers = {
-        'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+        'Authorization': `Bearer ${sessionStorage.token}`,
         'Content-Type': 'application/json'
     };
     let body = JSON.stringify({ client_hash: clientHash });
