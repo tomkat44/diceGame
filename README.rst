@@ -9,7 +9,8 @@ Dependencies
 .. code:: bash
 
    sudo apt-get update
-   sudo apt-get install -yq apache2 python3{,-pip,-venv} mariadb-server libmariadb-dev
+   sudo apt-get install -yq pkgconf fonts-noto-core apache2 \
+      python3{,-pip,-venv} mariadb-server lib{mariadb,mysqlclient}-dev
 
 Backend
 -------
@@ -19,7 +20,7 @@ Set up MySQL database
 
 .. code:: bash
 
-   mysql -u root -p < backend/initdb.sql
+   sudo mysql -u root -p < backend/initdb.sql
 
 Create JWT keys
 ^^^^^^^^^^^^^^^
@@ -46,7 +47,7 @@ Set up project
 .. code:: bash
 
    pushd /var/www/html/digidice/backend
-   sudo -uwww-data python -mvenv .venv
+   sudo -uwww-data python3 -mvenv .venv
    sudo -uwww-data .venv/bin/python -mpip install --no-cache --use-pep517 -e .[uwsgi]
    sudo -uwww-data .venv/bin/python manage.py migrate
    sudo -uwww-data .venv/bin/python manage.py createsuperuser --username admin
@@ -108,8 +109,6 @@ Store CA key & certificate
 
 .. code:: bash
 
-   mkdir -p ~/.pki/nssdb
-   certutil -A -t 'C,,' -n NetSec -d sql:$HOME/.pki/nssdb -i /tmp/netsec.crt
    sudo mv /tmp/netsec.key /etc/ssl/private
    sudo mv /tmp/netsec.crt /usr/local/share/ca-certificates
    sudo update-ca-certificates
@@ -131,14 +130,14 @@ Start uWSGI
 
 .. code:: bash
 
-   sudo mkdir -p /var/run/uwsgi
+   sudo mkdir -p /var/run/uwsgi /etc/uwsgi
    sudo chown www-data:www-data /var/run/uwsgi
-   sudo /var/www/html/digidice/backend/.venv/bin/uwsgi \
-         --xml /var/www/html/digidice/config/uwsgi.xml
+   sudo mv /var/www/html/digidice/config/uwsgi.xml /etc/uwsgi
+   sudo /var/www/html/digidice/backend/.venv/bin/uwsgi --xml /etc/uwsgi/uwsgi.xml
 
 Start Apache
 ^^^^^^^^^^^^
 
 .. code:: bash
 
-   sudo systemctl start apache2
+   sudo systemctl restart apache2

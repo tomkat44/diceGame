@@ -78,8 +78,10 @@ Vagrant.configure('2') do |config|
 
         # configure uWSGI
         echo 'd /var/run/uwsgi 0755 www-data www-data -' > /etc/tmpfiles.d/uwsgi.conf
-        sed -i /var/www/html/digidice/config/uwsgi.xml -e '/daemonize/d'
+        mkdir /etc/uwsgi
         mv /var/www/html/digidice/config/uwsgi.service /etc/systemd/system
+        mv /var/www/html/digidice/config/uwsgi.xml /etc/uwsgi
+        sed -i /etc/uwsgi/uwsgi.xml -e '/daemonize/d'
         systemctl enable uwsgi
 
         # configure Apache

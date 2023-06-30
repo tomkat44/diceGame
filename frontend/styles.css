@@ -1,3 +1,9 @@
+:root {
+  --font-family: sans-serif,
+        "Noto Sans", "Segoe UI",
+        "Noto Sans Symbols 2", "Segoe UI Symbol";
+}
+
 main {
     text-align: center;
 }
