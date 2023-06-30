@@ -2,10 +2,16 @@ import { display } from './modal.js';
 
 const form = document.forms.login;
 
+form.lastElementChild.disabled =
+    document.querySelectorAll('input:-webkit-autofill').length < 2;
+
 form.addEventListener('input', (evt) => {
     // Reset validity on input
     evt.target.setCustomValidity('');
-}, {passive: true});
+    const inputs = Array.from(form.elements);
+    const button = inputs.pop();
+    button.disabled = inputs.some(e => !e.validity.valid);
+});
 
 form.addEventListener('submit', async (evt) => {
     evt.preventDefault();

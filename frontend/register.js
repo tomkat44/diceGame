@@ -2,8 +2,8 @@ import { display } from './modal.js';
 
 const form = document.forms.register;
 
-const errTooShort = 'The password is too short!';
-const errMismatch = 'The passwords do not match!';
+const ERR_TOO_SHORT = 'The password is too short!';
+const ERR_MISMATCH = 'The passwords do not match!';
 
 zxcvbnts.core.zxcvbnOptions.setOptions({
     translations: zxcvbnts['language-en'].translations,
@@ -30,7 +30,7 @@ form.elements.password.addEventListener('keyup', (evt) => {
     if (pwd.length < 8) {
         bar.value = 0;
         bar.classList.value = '';
-        bar.parentElement.dataset.tooltip = errTooShort;
+        bar.parentElement.dataset.tooltip = ERR_TOO_SHORT;
         return;
     }
 
@@ -57,6 +57,9 @@ form.addEventListener('input', (evt) => {
         form.elements.repeat_password.setCustomValidity('');
     if (evt.target.name == 'repeat_password')
         form.elements.password.setCustomValidity('');
+    const inputs = Array.from(form.elements);
+    const button = inputs.pop();
+    button.disabled = inputs.some(e => !e.validity.valid);
 });
 
 form.addEventListener('submit', async (evt) => {
@@ -66,13 +69,13 @@ form.addEventListener('submit', async (evt) => {
     const { password, repeat_password } = form.elements;
     if (password.value.length < 8) {
         // Password is too short
-        password.setCustomValidity(errTooShort);
-        repeat_password.setCustomValidity(errTooShort);
+        password.setCustomValidity(ERR_TOO_SHORT);
+        repeat_password.setCustomValidity(ERR_TOO_SHORT);
         form.reportValidity();
     } else if (password.value != repeat_password.value) {
         // Passwords don't match
-        password.setCustomValidity(errMismatch);
-        repeat_password.setCustomValidity(errMismatch);
+        password.setCustomValidity(ERR_MISMATCH);
+        repeat_password.setCustomValidity(ERR_MISMATCH);
         form.reportValidity();
     } else {
         // Submit AJAX request
