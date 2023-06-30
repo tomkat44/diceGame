@@ -1,7 +1,6 @@
 :root {
-  --font-family: sans-serif,
-        "Noto Sans", "Segoe UI",
-        "Noto Sans Symbols 2", "Segoe UI Symbol";
+  --font-family: system-ui, sans-serif,
+        "Noto Sans", "Segoe UI", "Noto Sans Symbols 2", "Segoe UI Symbol";
 }
 
 main {
@@ -58,6 +57,10 @@ input:invalid {
 
 span[data-tooltip] {
     border-bottom: none;
+}
+
+span[data-tooltip]::before {
+    white-space: pre-wrap;
 }
 
 progress.very-weak::-webkit-progress-bar,

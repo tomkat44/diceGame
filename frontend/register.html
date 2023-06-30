@@ -6,7 +6,11 @@
         <meta name="author" content="Thomas Katsantas, Ioannis Somos">
         <link rel="stylesheet" href="vendor/pico/pico.min.css" type="text/css">
         <link rel="stylesheet" href="styles.css" type="text/css">
-        <script src="vendor/zxcvbn-ts/zxcvbn-ts.min.js"
+        <script src="vendor/zxcvbn-ts/core.min.js"
+                type="application/javascript" async></script>
+        <script src="vendor/zxcvbn-ts/language-common.min.js"
+                type="application/javascript" async></script>
+        <script src="vendor/zxcvbn-ts/language-en.min.js"
                 type="application/javascript" async></script>
         <script type="application/javascript" src="theme.js" async></script>
         <script type="module" src="register.js" defer></script>
@@ -40,7 +44,7 @@
                     </label>
                 </div>
                 <label>Email
-                    <input name="email" class="user-input" placeholder="Email">
+                    <input type="email" name="email" class="user-input" placeholder="Email">
                 </label>
                 <div class="grid">
                     <label>Password

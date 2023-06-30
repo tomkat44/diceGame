@@ -10,7 +10,6 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import Response
 
 from .serializers import CommitRollSerializer, IntegersSerializer, RevealRollSerializer
 
@@ -66,7 +65,7 @@ class CommitRollView(GenericAPIView):
             f'rand_client_{username}': rand_client,
             f'rand_server_{username}': rand_server,
             f'commit_{username}': serializer.validated_data
-        }, timeout=60)
+        }, timeout=15)
         return Response(serializer.data)
 
 
@@ -103,8 +102,9 @@ class RevealRollView(GenericAPIView):
         client_hash: str = commit_data['client_hash']
         check_hash = _hash_ints(client_int, server_int)
         if check_hash != client_hash:
-            error = {'client_integers': f'Expected {client_hash}, got {check_hash}'}
-            raise ValidationError(error, code='hash_mismatch')
+            raise ValidationError({
+                'client_integers': f'Expected {client_hash}, got {check_hash}'
+            }, code='hash_mismatch')
         # reveal the server's numbers
         serializer.validated_data['server_integers'] = {
             'client': rand_client,

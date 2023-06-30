@@ -24,6 +24,8 @@ out/
 
 ## Neovim
 .nvimrc
+pyrightconfig.json
+jsconfig.json
 
 ## Python
 __pycache__/
@@ -40,7 +42,6 @@ venv/
 .env/
 *.py[cod]
 *$py.class
-pyrightconfig.json
 
 ## Vagrant
 .vagrant/

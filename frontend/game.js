@@ -31,7 +31,7 @@ const cmp = (a, b) => (a > b) - (a < b);
 
 /**
  * Computes a dice roll from two numbers via XOR.
- * @param {BigInt} ra the first number
+ * @param {bigint} ra the first number
  * @param {string} rb the second number (as a string)
  * @returns {number} a value from 1~6
  */
@@ -43,6 +43,9 @@ const compute = (ra, rb) => Number((ra ^ BigInt(rb)) % 6n) + 1;
  * @param {string} rb the second number (as a string)
  */
 const hash = async (ra, rb) => hashwasm.sha3(ra + rb, 256);
+
+/** Produces a random number from 1~6. */
+const rand = () => Math.round(Math.random() * 5) + 1;
 
 /**
  * Show errors in a modal.
@@ -63,12 +66,7 @@ function showErrors(data) {
             const div = document.createElement('div');
             const b = document.createElement('b');
             b.textContent = key + ':';
-            if (Array.isArray(val)) {
-                console.error({[key]: val});
-                div.append(b, ' ' + val[0]);
-            } else {
-                div.append(b, ' ' + val);
-            }
+            div.append(b, ' ' + val);
             nodes.push(div);
         }
         display(nodes);
@@ -89,7 +87,6 @@ rollButton.addEventListener('click', async () => {
     serverImg.previousElementSibling.classList.add('hide');
     rollResult.textContent = 'Rolling\u2026';
     const rollAnimation = setInterval(() => {
-        const rand = () => Math.round(Math.random() * 5) + 1;
         clientImg.src = `/dice_images/dice-${rand()}.png`;
         serverImg.src = `/dice_images/dice-${rand()}.png`;
     }, 100);
@@ -111,8 +108,17 @@ rollButton.addEventListener('click', async () => {
     // FIXME: can't read the response body for some reason
     if (res.status === 401) {
         clearInterval(rollAnimation);
-        showErrors({ detail: 'Unauthorized. Please login or register.' });
+        showErrors({
+            detail: 'Unauthorized. Please login or register.'
+        });
         delete sessionStorage.token;
+        return;
+    }
+    if (res.status === 429) {
+        clearInterval(rollAnimation);
+        showErrors({
+            detail: 'Too many requests. Please wait a bit.'
+        });
         return;
     }
     let data = await res.json();

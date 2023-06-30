@@ -5,7 +5,15 @@ const form = document.forms.register;
 const errTooShort = 'The password is too short!';
 const errMismatch = 'The passwords do not match!';
 
-zxcvbnts.core.zxcvbnOptions.setOptions({ maxLength: 128 });
+zxcvbnts.core.zxcvbnOptions.setOptions({
+    translations: zxcvbnts['language-en'].translations,
+    graphs: zxcvbnts['language-common'].adjacencyGraphs,
+    dictionary: {
+        ...zxcvbnts['language-common'].dictionary,
+        ...zxcvbnts['language-en'].dictionary,
+    },
+    maxLength: 128
+});
 
 form.elements.password.addEventListener('keyup', (evt) => {
     const bar = document.getElementById('progress');
@@ -20,15 +28,15 @@ form.elements.password.addEventListener('keyup', (evt) => {
 
     // Length must be at least 8 chars
     if (pwd.length < 8) {
-        bar.value = 20; // pwd.length;
-        bar.classList.value = 'very-weak';
+        bar.value = 0;
+        bar.classList.value = '';
         bar.parentElement.dataset.tooltip = errTooShort;
         return;
     }
 
     // Check password strength
     const inputs = Array.from(document.querySelectorAll('.user-input'), e => e.value);
-    const score = zxcvbnts.core.zxcvbn(pwd, inputs).score;
+    const { feedback, score } = zxcvbnts.core.zxcvbn(pwd, inputs);
     const strength = {
         0: 'very weak',
         1: 'weak',
@@ -38,7 +46,8 @@ form.elements.password.addEventListener('keyup', (evt) => {
     };
     bar.value = score * 20 + 20;
     bar.classList.value = strength[score].replace(' ', '-');
-    bar.parentElement.dataset.tooltip = 'Password strength: ' + strength[score];
+    bar.parentElement.dataset.tooltip =
+        `Password strength: ${strength[score]}.\n${feedback.warning || ''}`;
 });
 
 form.addEventListener('input', (evt) => {
@@ -79,14 +88,18 @@ form.addEventListener('submit', async (evt) => {
         if (res.ok) location.href = 'login.html';
 
         // Report errors if not OK
-        const err = await res.json();
-        if ('detail' in err) {
-            display(err.detail);
+        const data = await res.json();
+        if ('detail' in data) {
+            display(data.detail);
         } else {
-            for (const key in err) {
-                form.elements[key].setCustomValidity(err[key]);
+            for (const key in data) {
+                let error = data[key];
+                if (Array.isArray(error))
+                    error = error.join('\n');
+                if (key in form.elements)
+                    form.elements[key].setCustomValidity(data[key]);
                 if (key == 'password')
-                    repeat_password.setCustomValidity(err[key]);
+                    repeat_password.setCustomValidity(data[key]);
             }
             form.reportValidity();
         }

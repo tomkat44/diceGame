@@ -139,6 +139,7 @@ DEFAULT_MINIMAL_STRENGTH = 3
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django_zxcvbn_password_validator.ZxcvbnPasswordValidator'},
     {'NAME': 'users.validators.MinimumEntropyValidator'},
 ]
