@@ -1,6 +1,9 @@
-:root {
-  --font-family: system-ui, sans-serif,
-        "Noto Sans", "Segoe UI", "Noto Sans Symbols 2", "Segoe UI Symbol";
+:root[data-theme=dark] {
+    --invert: invert(5%);
+}
+
+:root[data-theme=light] {
+    --invert: invert(80%);
 }
 
 main {
@@ -98,10 +101,19 @@ dialog .title {
 }
 
 #switch-theme {
-    width: max-content;
     border-radius: 50%;
     font-size: larger;
-    padding: 0.1rem 0.45rem;
+    padding: 0.2em;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+#switch-theme path:first-of-type {
+    fill: var(--contrast);
+}
+
+#switch-theme path:last-of-type {
+    fill: var(--contrast-inverse);
 }
 
 #roll-dice img {
@@ -109,8 +121,5 @@ dialog .title {
     max-width: 400px;
     width: calc(100vw / 1.5);
     border-radius: 7.5%;
-}
-
-:root[data-theme=light] #roll-dice img {
-    filter: invert(0.8);
+    filter: var(--invert);
 }

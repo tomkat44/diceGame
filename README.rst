@@ -9,8 +9,8 @@ Dependencies
 .. code:: bash
 
    sudo apt-get update
-   sudo apt-get install -yq pkgconf fonts-noto-core apache2 \
-      python3{,-pip,-venv} mariadb-server lib{mariadb,mysqlclient}-dev
+   sudo apt-get install -yq pkgconf python3{,-pip,-venv} \
+       apache2 mariadb-server lib{mariadb,mysqlclient}-dev
 
 Backend
 -------
@@ -38,8 +38,8 @@ Copy directory
 
    sudo mkdir -p /var/www/html
    sudo rsync -Eav . /var/www/html/digidice --chown=www-data:www-data \
-      --exclude=config/apache2.conf --exclude=config/uwsgi.service \
-      --exclude=backend/initdb.sql --exclude=README.rst --exclude=.git*
+       --exclude=config/apache2.conf --exclude=config/uwsgi.service \
+       --exclude=backend/initdb.sql --exclude=README.rst --exclude=.git*
 
 Set up project
 ^^^^^^^^^^^^^^
